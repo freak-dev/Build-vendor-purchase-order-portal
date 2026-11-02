@@ -14,5 +14,3 @@ Pin the last stable backend and frontend image tags in a versioned Compose relea
 
 ## Local source
 Backend: Java 21 and Maven 3.9 with MySQL 8. Frontend: Node 24/npm 11. Set DB connection and admin bootstrap environment variables; see root README. Flyway migrations run automatically at backend startup.
-
-
