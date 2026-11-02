@@ -1,0 +1,40 @@
+services:
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: vendor_portal
+      MYSQL_USER: portal
+      MYSQL_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in server .env}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Set MYSQL_ROOT_PASSWORD in server .env}
+    volumes: [mysql-data:/var/lib/mysql]
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+  backend:
+    image: {{ registry_namespace }}/vendor-purchase-order-portal-backend:{{ release_tag }}
+    environment:
+      DB_URL: jdbc:mysql://db:3306/vendor_portal?serverTimezone=UTC
+      DB_USER: portal
+      DB_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in server .env}
+      ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Set ADMIN_PASSWORD in server .env}
+    depends_on:
+      db: {condition: service_healthy}
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8080/actuator/health | grep -q UP"]
+      interval: 15s
+      timeout: 5s
+      retries: 8
+      start_period: 45s
+    restart: unless-stopped
+  frontend:
+    image: {{ registry_namespace }}/vendor-purchase-order-portal-frontend:{{ release_tag }}
+    ports: ["{{ app_port }}:80"]
+    depends_on:
+      backend: {condition: service_healthy}
+    restart: unless-stopped
+volumes:
+  mysql-data:

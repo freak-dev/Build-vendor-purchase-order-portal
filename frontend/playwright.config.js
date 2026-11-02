@@ -1,0 +1,2 @@
+import {defineConfig,devices} from '@playwright/test';
+export default defineConfig({testDir:'./e2e',fullyParallel:false,reporter:[['list'],['html',{outputFolder:'playwright-report',open:'never'}]],use:{baseURL:process.env.BASE_URL||'http://localhost:5173',trace:'retain-on-failure',screenshot:'only-on-failure',...devices['Desktop Chrome']},webServer:{command:'npm run dev',url:'http://localhost:5173',reuseExistingServer:!process.env.CI,timeout:120000}});

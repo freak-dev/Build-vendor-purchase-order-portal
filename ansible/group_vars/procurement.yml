@@ -1,0 +1,5 @@
+app_dir: /opt/vendor-portal
+app_port: 8088
+registry_namespace: your-dockerhub-username
+release_tag: latest
+compose_file: docker-compose.deploy.yml

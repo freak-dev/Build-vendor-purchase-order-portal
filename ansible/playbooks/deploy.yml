@@ -1,0 +1,101 @@
+- name: Deploy the Vendor Purchase Order Portal
+  hosts: procurement
+  become: true
+  vars:
+    compose_path: "{{ app_dir }}/docker-compose.deploy.yml"
+    previous_compose_path: "{{ app_dir }}/docker-compose.previous.yml"
+  tasks:
+    - name: Install Docker engine and Compose plugin
+      ansible.builtin.apt:
+        name: [docker.io, docker-compose-v2]
+        state: present
+        update_cache: true
+    - name: Ensure Docker is enabled
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: true
+    - name: Create application directory
+      ansible.builtin.file:
+        path: "{{ app_dir }}"
+        state: directory
+        owner: "{{ ansible_user }}"
+        mode: '0750'
+    - name: Check for out-of-band secret configuration
+      ansible.builtin.stat:
+        path: "{{ app_dir }}/.env"
+      register: app_env
+    - name: Require environment secrets to be provisioned outside source control
+      ansible.builtin.assert:
+        that: app_env.stat.exists
+        fail_msg: "Create {{ app_dir }}/.env with DB_PASSWORD, MYSQL_ROOT_PASSWORD, and ADMIN_PASSWORD before deployment."
+    - name: Check for a previously deployed release
+      ansible.builtin.stat:
+        path: "{{ compose_path }}"
+      register: previous_release
+    - name: Preserve the current Compose release for rollback
+      ansible.builtin.copy:
+        src: "{{ compose_path }}"
+        dest: "{{ previous_compose_path }}"
+        remote_src: true
+        mode: '0640'
+      when: previous_release.stat.exists
+    - name: Render the requested image release
+      ansible.builtin.template:
+        src: "{{ playbook_dir }}/../templates/docker-compose.deploy.yml.j2"
+        dest: "{{ compose_path }}"
+        owner: "{{ ansible_user }}"
+        mode: '0640'
+    - name: Roll out and verify the requested release
+      block:
+        - name: Pull tagged images and start services
+          community.docker.docker_compose_v2:
+            project_src: "{{ app_dir }}"
+            files: [docker-compose.deploy.yml]
+            env_files: [.env]
+            pull: always
+            state: present
+        - name: Verify backend health through the frontend proxy
+          ansible.builtin.uri:
+            url: "http://127.0.0.1:{{ app_port }}/actuator/health"
+            status_code: 200
+          register: health
+          retries: 12
+          delay: 10
+          until: health.status == 200
+      rescue:
+        - name: Restore the previous Compose release
+          ansible.builtin.copy:
+            src: "{{ previous_compose_path }}"
+            dest: "{{ compose_path }}"
+            remote_src: true
+            mode: '0640'
+          when: previous_release.stat.exists
+        - name: Restart the previous image release
+          community.docker.docker_compose_v2:
+            project_src: "{{ app_dir }}"
+            files: [docker-compose.deploy.yml]
+            env_files: [.env]
+            pull: always
+            state: present
+          when: previous_release.stat.exists
+        - name: Verify health after restoring the previous release
+          ansible.builtin.uri:
+            url: "http://127.0.0.1:{{ app_port }}/actuator/health"
+            status_code: 200
+          register: rollback_health
+          retries: 12
+          delay: 10
+          until: rollback_health.status == 200
+          when: previous_release.stat.exists
+        - name: Report first-release failure when no rollback target exists
+          ansible.builtin.fail:
+            msg: "Deployment failed before a previous release existed; automatic rollback was not possible."
+          when: not previous_release.stat.exists
+        - name: Report recovered prior release
+          ansible.builtin.debug:
+            msg: "Deployment failed. The prior Compose release was restored and its health endpoint returned HTTP 200."
+          when: previous_release.stat.exists
+        - name: Fail the deployment after rollback
+          ansible.builtin.fail:
+            msg: "New release failed its health check. Previous release restored and verified."
