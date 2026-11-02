@@ -16,6 +16,9 @@ fi
 chmod 600 "$secret_file"
 
 mkdir -p "$work_root"
+if ! git config --global --get-all safe.directory | grep -Fxq "$project/.git"; then
+  git config --global --add safe.directory "$project/.git"
+fi
 if [[ ! -e "$source_repo/.git" ]]; then
   git clone --local "$project" "$source_repo"
 fi
