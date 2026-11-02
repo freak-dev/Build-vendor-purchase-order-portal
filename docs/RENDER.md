@@ -5,8 +5,8 @@
 ## Blueprint resources
 
 - `vendor-portal-db`: free Render Postgres in Singapore.
-- `vendor-portal-api`: Dockerized Spring Boot backend with `/actuator/health` check and PostgreSQL Flyway migrations.
-- `vendor-portal-web`: static frontend; its build embeds the API URL and the backend allows requests from the frontend origin.
+- `vendor-portal-api-shreyansh-23102b0017`: Dockerized Spring Boot backend with `/actuator/health` check and PostgreSQL Flyway migrations.
+- `vendor-portal-web-shreyansh-23102b0017`: static frontend; its build embeds the API URL and the backend allows requests from the frontend origin.
 
 The API bootstrap creates an `admin` user with a generated password. Retrieve that password from the API service's environment settings in the Render Dashboard after the first deployment. Never put it in Git.
 

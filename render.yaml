@@ -7,7 +7,7 @@ databases:
 
 services:
   - type: web
-    name: vendor-portal-api
+    name: vendor-portal-api-shreyansh-23102b0017
     runtime: docker
     plan: free
     region: singapore
@@ -42,10 +42,10 @@ services:
       - key: ADMIN_PASSWORD
         generateValue: true
       - key: APP_CORS_ORIGINS
-        value: https://vendor-portal-web.onrender.com
+        value: https://vendor-portal-web-shreyansh-23102b0017.onrender.com
 
   - type: web
-    name: vendor-portal-web
+    name: vendor-portal-web-shreyansh-23102b0017
     runtime: static
     plan: free
     region: singapore
@@ -54,4 +54,4 @@ services:
     staticPublishPath: dist
     envVars:
       - key: VITE_API_BASE_URL
-        value: https://vendor-portal-api.onrender.com
+        value: https://vendor-portal-api-shreyansh-23102b0017.onrender.com
