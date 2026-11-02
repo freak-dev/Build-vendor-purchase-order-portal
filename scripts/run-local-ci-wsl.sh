@@ -62,15 +62,16 @@ done
 jenkins_admin_password=$(sed -n 's/^JENKINS_ADMIN_PASSWORD=//p' "$secret_file")
 netrc=$(mktemp)
 headers=$(mktemp)
-trap 'rm -f "$netrc" "$headers"' EXIT
+cookies=$(mktemp)
+trap 'rm -f "$netrc" "$headers" "$cookies"' EXIT
 printf 'machine 127.0.0.1 login admin password %s\n' "$jenkins_admin_password" > "$netrc"
 chmod 600 "$netrc"
 base='http://127.0.0.1:8081'
 curl -fsS --netrc-file "$netrc" "$base/api/json" >/dev/null
 curl -fsS http://127.0.0.1:5000/v2/ >/dev/null
-crumb_json=$(curl -fsS --netrc-file "$netrc" "$base/crumbIssuer/api/json")
+crumb_json=$(curl -fsS --netrc-file "$netrc" -c "$cookies" "$base/crumbIssuer/api/json")
 crumb_header=$(python3 -c 'import json,sys; d=json.load(sys.stdin); print(d["crumbRequestField"]+": "+d["crumb"])' <<< "$crumb_json")
-curl -fsS --netrc-file "$netrc" -X POST -H "$crumb_header" -D "$headers" \
+curl -fsS --netrc-file "$netrc" -b "$cookies" -c "$cookies" -X POST -H "$crumb_header" -D "$headers" \
   --data-urlencode 'PUBLISH_IMAGES=true' \
   --data-urlencode 'REGISTRY_HOST=localhost:5000' \
   --data-urlencode 'REGISTRY_NAMESPACE=vendor' \

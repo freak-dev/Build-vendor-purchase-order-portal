@@ -16,7 +16,9 @@ if (job == null) {
 
 def remote = new UserRemoteConfig('file:///home/areyy/.cache/vendor-portal-ci/source', null, null, null)
 def scm = new GitSCM([remote], [new BranchSpec('*/develop')], false, [], null, null, [])
-job.setDefinition(new CpsScmFlowDefinition(scm, 'Jenkinsfile', false))
+def flow = new CpsScmFlowDefinition(scm, 'Jenkinsfile')
+flow.setLightweight(false)
+job.setDefinition(flow)
 job.addProperty(new ParametersDefinitionProperty([
   new BooleanParameterDefinition('PUBLISH_IMAGES', false, 'Publish images to the configured local or remote registry.'),
   new StringParameterDefinition('REGISTRY_HOST', '', 'Optional registry host.'),
