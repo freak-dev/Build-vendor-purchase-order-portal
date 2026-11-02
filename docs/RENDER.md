@@ -1,27 +1,21 @@
 # Render free-tier demo deployment
 
-`render.yaml` defines a free Render Postgres database, the Spring Boot API container, and the static React/Vite frontend. This is suitable for a student/demo deployment with no monthly hosting cost under Render's current free limits. Free web services may sleep after inactivity. Render's free Postgres expires after 30 days, with a limited grace period before deletion; export any data you need before it expires. It is not durable production hosting.
+The project has a free Render Postgres database and a live static frontend in the confirmed Render workspace. `render.yaml` defines only the Spring Boot API and references the existing Postgres database by its Render name; it will not create duplicate database or frontend resources. The API uses the free plan in Singapore, PostgreSQL Flyway migrations, and `/actuator/health` for its health check.
 
-## Blueprint resources
+Render's free Postgres expires after 30 days (this instance is scheduled to expire on December 2, 2026). Export data before expiration. Free web services may sleep after inactivity. These free resources are for coursework and demos, not durable production hosting.
 
-- `vendor-portal-db`: free Render Postgres in Singapore.
-- `vendor-portal-api-shreyansh-23102b0017`: Dockerized Spring Boot backend with `/actuator/health` check and PostgreSQL Flyway migrations.
-- `vendor-portal-web-shreyansh-23102b0017`: static frontend; its build embeds the API URL and the backend allows requests from the frontend origin.
+## Finish the API deployment
 
-The API bootstrap creates an `admin` user with a generated password. Retrieve that password from the API service's environment settings in the Render Dashboard after the first deployment. Never put it in Git.
-
-## Deploy
-
-1. Open the Render Dashboard and create a new Blueprint from `https://github.com/freak-dev/Build-vendor-purchase-order-portal`, branch `develop`.
-2. Review the resources and keep all three on the free plan, then apply the Blueprint.
-3. Wait for the database to become available and the API health check to pass, then verify the static site.
-4. If the generated `onrender.com` names differ because a name is already taken, update `VITE_API_BASE_URL` on the static site and `APP_CORS_ORIGINS` on the API to the actual URLs, then redeploy both.
-5. Open the frontend URL, sign in as `admin` using the generated API environment variable, and change the password before using the demo with other people.
+1. In the Render Dashboard, choose **New > Blueprint** and connect `https://github.com/freak-dev/Build-vendor-purchase-order-portal`, branch `develop`.
+2. Keep the Blueprint path as `render.yaml`. It defines only `vendor-portal-api-shreyansh-23102b0017`; its database references resolve to the already provisioned `vendor-portal-db` resource in this workspace.
+3. Review the changes and deploy the Blueprint. Render requires this Dashboard action to create/sync a Blueprint; the connected Render tools cannot submit that action.
+4. Wait for the API deploy to become live and pass `/actuator/health`. The static site already embeds this API URL and its origin is configured in `APP_CORS_ORIGINS`.
+5. Retrieve the generated `ADMIN_PASSWORD` from the API service's environment settings. Never commit or paste it into chat.
 
 ## Local PostgreSQL mode
 
-Set `DB_URL`, `DB_USER`, `DB_PASSWORD`, and `FLYWAY_LOCATIONS=classpath:db/migration-postgresql`. The default local setup continues to use the MySQL migrations. Both migration sets represent the same schema.
+Set `DB_URL`, `DB_USER`, `DB_PASSWORD`, and `FLYWAY_LOCATIONS=classpath:db/migration-postgresql`. The local Docker Compose setup continues to use MySQL migrations. Both migration sets represent the same schema.
 
-## Limitations
+## Recreate resources in another workspace
 
-The Render free database is temporary and can be removed after its expiration window. Export data before expiration. Free web services can cold-start after idle periods. Use a paid durable database and service plan before relying on this portal for business records.
+Create a free Postgres database named `vendor-portal-db` and a static site named `vendor-portal-web-shreyansh-23102b0017` first. Use `frontend/` as the static site's root directory, `npm ci && npm run build` as the build command, and `dist` as the publish path. Set `VITE_API_BASE_URL` to `https://vendor-portal-api-shreyansh-23102b0017.onrender.com`, then apply this Blueprint to create the API.

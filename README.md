@@ -17,7 +17,7 @@ A DevOps-enabled procurement MVP for managing suppliers, catalogue items, stock,
 4. Visit http://localhost:8088. Sign in with `ADMIN_USERNAME` and `ADMIN_PASSWORD` from `.env`.
 5. Stop with `docker compose down`; preserve the database with its named volume. Remove stored data only with `docker compose down -v`.
 
-With Docker Engine inside Ubuntu WSL, start the stack with `scripts/start-compose-wsl.sh`. If Windows `localhost` forwarding is unavailable, find the current WSL address with `wsl.exe -d Ubuntu -- hostname -I` and open `http://<WSL-IP>:8088` in the Windows browser. WSL addresses can change after restarting the distro.
+With Docker Engine inside Ubuntu WSL, start the stack with `scripts/start-compose-wsl.sh`. If Windows cannot reach the WSL address, run `scripts/fix-wsl-localhost.ps1` from an Administrator PowerShell window. It adds a loopback-only port forward so `http://localhost:8088` reaches the app; rerun it if WSL gets a new address after restarting.
 
 The default Compose port is 8088. The backend and database are internal services; MySQL is not published to the host. The health endpoint is `/actuator/health`, and OpenAPI is at `/swagger-ui.html`.
 
@@ -62,7 +62,7 @@ Ansible inventory is a safe example placeholder (`192.0.2.10`). Configure it for
 
 ### Free Render demo hosting
 
-`render.yaml` defines a free Render Postgres database, a Dockerized Spring Boot API, and the static React/Vite frontend. The Render free database expires after 30 days; free web services can sleep after inactivity. The current workspace already has the project database and static frontend provisioned. To create and wire the API, connect this repo's `develop` branch as a Blueprint in the Render Dashboard and deploy the Blueprint; matching resource names allow Render to adopt the existing database and frontend while creating the API. The Blueprint injects database connection properties without exposing credentials in chat or Git. The API generates an admin password; retrieve it from the API service's environment settings. See [Render deployment notes](docs/RENDER.md).
+The current Render workspace has a free Postgres database and a live static frontend. `render.yaml` defines the Dockerized Spring Boot API and securely references the existing database. Connect this repo's `develop` branch as a Blueprint in the Render Dashboard and deploy it to create the API; no duplicate database or frontend is declared. The free database expires after 30 days, and free web services can sleep after inactivity. The API generates an admin password; retrieve it from the API service's environment settings. See [Render deployment notes](docs/RENDER.md).
 
 The GitHub and Render accounts must be authorized in their respective dashboards; no account credentials or database secrets belong in Git or chat. This is coursework/demo hosting, not production availability.
 To execute the pipeline without external credentials, run `scripts/run-local-ci.ps1`. It launches a local Jenkins controller and registry inside WSL, runs the `develop` pipeline, and publishes images only to the local registry. See [the CI harness guide](ci/jenkins/README.md).
