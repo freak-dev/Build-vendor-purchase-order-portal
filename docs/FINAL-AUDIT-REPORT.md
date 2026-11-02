@@ -82,7 +82,7 @@ The assignment is **not fully complete against its end-to-end acceptance criteri
 **Implementation:** A declarative `Jenkinsfile` defines SCM polling, Maven verification, frontend installation/build, Selenium, JUnit publishing, artifact archiving, and parameterized registry/deploy gates. A local Jenkins controller and local Registry v2 were started in WSL. The pipeline job initialized and Build 1 was triggered.
 **Files:** `Jenkinsfile`, `ci/jenkins/`, `scripts/run-local-ci.ps1`, `docs/evidence/jenkins-build-2-summary.txt`, `docs/DEPLOYMENT.md`.
 **Commands executed:** `scripts/run-local-ci.ps1` (local Jenkins/Registry bootstrap and build trigger).
-**Actual output:** Jenkins 2.580.2 started at `http://localhost:8081`; job `vendor-portal-ci` was created. On a clean Jenkins home, Builds 1 and 2 finished `SUCCESS`. Build 2 also verified the optional screenshot archive no longer emits a warning on passing tests. An earlier setup attempt failed because the controller lacked the Timestamper plugin; that directive was removed. SCM polling is configured at five-minute intervals; a GitHub webhook is not configured.
+**Actual output:** Jenkins 2.580.2 started at `http://localhost:8081`; job `vendor-portal-ci` was created. On a clean Jenkins home, Builds 1, 2, and 3 finished `SUCCESS`. Build 3 verified the updated deploy-stage Jenkinsfile parses and the normal pipeline remains green. The deploy stage was skipped because no target was configured. Build 2 also verified the optional screenshot archive no longer emits a warning on passing tests. SCM polling is configured at five-minute intervals; a GitHub webhook is not configured.
 **Evidence required:** Retain the local build record; configure a remote Jenkins/GitHub webhook only if instructor verification requires it.
 **Completion status:** Complete for local Jenkins CI setup and execution.
 
@@ -92,7 +92,7 @@ The assignment is **not fully complete against its end-to-end acceptance criteri
 **Implementation:** Jenkinsfile contains checkout, build/test, package, Docker publication, and an Ansible deployment stage gated on a configured target and prior stage success. The deploy stage installs the pinned `community.docker` collection, limits execution to the requested inventory group, and reads the sudo password from a Jenkins Secret file credential.
 **Files:** `Jenkinsfile`, `ansible/requirements.yml`, `ansible/playbooks/deploy.yml`, `ansible/templates/docker-compose.deploy.yml.j2`, `docs/DEPLOYMENT.md`.
 **Commands executed:** Local Jenkins controller startup and pipeline trigger; Ansible syntax check recorded.
-**Actual output:** Clean-home Jenkins Build 1 ran checkout, Maven, frontend build, Selenium, packaging, and image-publish stages successfully. The deploy stage was skipped by its target gate. No target deployment was performed.
+**Actual output:** Clean-home Jenkins Builds 1, 2, and 3 ran checkout, Maven, frontend build, Selenium, packaging, and image-publish stages successfully. Build 3 used the updated Ansible deploy stage definition; that stage was skipped by its target gate. No target deployment was performed.
 **Evidence required:** Capture successful Jenkins stage logs and target health response after deployment.  
 **Completion status:** Partial.
 
@@ -112,7 +112,7 @@ The assignment is **not fully complete against its end-to-end acceptance criteri
 **Implementation:** Jenkinsfile runs Maven verification and Selenium before package/image/deployment stages. Jenkins declarative stage ordering gates later stages on success.  
 **Files:** `Jenkinsfile`, `backend/pom.xml`, `docs/evidence/jenkins-build-2-summary.txt`.
 **Commands executed:** `scripts/run-local-ci.ps1`; inspect Jenkins Build 1 console and JUnit records.
-**Actual output:** Successful clean-home Jenkins Builds 1 and 2 each recorded 4/4 Maven unit tests and 5/5 Selenium Failsafe tests, with zero failures/errors. Build 2 Selenium completed in 27.02 seconds. The pipeline reached packaging and image publishing only after both suites passed. Jenkins published JUnit results. No deliberate application-test failure/fix pair was staged.
+**Actual output:** Successful clean-home Jenkins Builds 1, 2, and 3 each recorded 4/4 Maven unit tests and 5/5 Selenium Failsafe tests, with zero failures/errors. Build 2 Selenium completed in 27.02 seconds and Build 3 in 28.15 seconds. The pipeline reached packaging and image publishing only after both suites passed. Jenkins published JUnit results. No deliberate application-test failure/fix pair was staged.
 **Evidence required:** Preserve the build record; demonstrate a controlled failure/fix only if the instructor requires it.
 **Completion status:** Complete for automated tests in local Jenkins.
 
@@ -132,7 +132,7 @@ The assignment is **not fully complete against its end-to-end acceptance criteri
 **Implementation:** Jenkinsfile has main-branch Docker build/tag/push and gated Ansible deploy stages using Jenkins credentials.  
 **Files:** `Jenkinsfile`, `Dockerfile.backend`, `Dockerfile.frontend`, `ansible/playbooks/deploy.yml`, `docs/evidence/jenkins-build-2-summary.txt`.
 **Commands executed:** Local Registry v2 and Jenkins containers were started; pipeline was triggered with `PUBLISH_IMAGES=true`, `REGISTRY_HOST=localhost:5000`, and namespace `vendor`.
-**Actual output:** Jenkins Builds 1 and 2 published backend and frontend images to the local registry. Tags `1` and `2` are present. Build 2 published `localhost:5000/vendor/vendor-purchase-order-portal-backend:2` with digest `sha256:46ebeb32d51fa1e55de478c85fecce21a40f7aab76938ab7d906d2c6abf259fb` and `localhost:5000/vendor/vendor-purchase-order-portal-frontend:2` with digest `sha256:accfbf83605b742c6afc62d8ca78b9e64daa338050360ee206628d6de2bdebff`. Registry tag APIs confirmed both repositories at tags `1` and `2`. The deploy stage was skipped because no external target was configured; Docker Hub was not used.
+**Actual output:** Jenkins Builds 1, 2, and 3 published backend and frontend images to the local registry. Tags `1`, `2`, and `3` are present. Build 3 published `localhost:5000/vendor/vendor-purchase-order-portal-backend:3` with digest `sha256:46ebeb32d51fa1e55de478c85fecce21a40f7aab76938ab7d906d2c6abf259fb` and `localhost:5000/vendor/vendor-purchase-order-portal-frontend:3` with digest `sha256:accfbf83605b742c6afc62d8ca78b9e64daa338050360ee206628d6de2bdebff`. Registry tag APIs confirmed both repositories at tags `1`, `2`, and `3`. The deploy stage was skipped because no external target was configured; Docker Hub was not used.
 **Evidence required:** Configure registry/Jenkins credentials, push a tagged release, deploy to a controlled host, and capture image digest and health response.  
 **Completion status:** Partial.
 
@@ -178,8 +178,8 @@ The assignment is **not fully complete against its end-to-end acceptance criteri
 | Ansible syntax | `playbook: plays/deploy.yml`; syntax passed with mounted config warning | Pass with warning |
 | Frontend install/build | `npm ci --no-audit --no-fund` added 98 packages in 11s; `npm run build` passed with Vite 7.3.7 and 1,637 modules transformed | Pass |
 | GitHub push/PR | SSH authentication passed; `main` and `develop` pushed and confirmed; PR create returned HTTP 403 | PR/review blocked on GitHub Pull Requests write authorization |
-| Jenkins | Jenkins 2.580.2; clean-home Builds 1 and 2 `SUCCESS`; each Maven 4/4 and Selenium 5/5 | Pass |
-| Local registry publish | Backend and frontend tags `1` and `2` visible in Registry v2; Build 2 push digests recorded above | Pass (local registry only) |
+| Jenkins | Jenkins 2.580.2; clean-home Builds 1–3 `SUCCESS`; each Maven 4/4 and Selenium 5/5 | Pass |
+| Local registry publish | Backend and frontend tags `1`–`3` visible in Registry v2; Build 3 push digests recorded above | Pass (local registry only) |
 | External Ansible deploy/rollback | No authorized target or SSH credential configured; Jenkins deploy stage skipped | Not run |
 
 ## Project acceptance gaps
