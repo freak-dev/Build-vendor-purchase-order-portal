@@ -159,11 +159,11 @@ The assignment is **not fully complete against its end-to-end acceptance criteri
 ### 15. Final release, documentation and viva — PARTIAL
 
 **Task description:** Prepare release, complete documentation, and support viva/demo.  
-**Implementation:** README, SRS, architecture, API, deployment, evidence, implementation plan and project report are present. This audit and presentation complete the written submission package. Jenkins and local registry evidence are captured; GitHub collaboration, hosted release, external deployment/rollback, and application screenshots remain outstanding.  
+**Implementation:** README, SRS, architecture, API, deployment, evidence, implementation plan and project report are present. This audit and presentation complete the written submission package. Jenkins and local registry evidence are captured; GitHub collaboration, hosted release, external deployment/rollback, and application screenshots remain outstanding.
 **Files:** `README.md`, `docs/`, `docs/FINAL-AUDIT-REPORT.md`, `docs/FINAL-PRESENTATION.html`.  
 **Commands executed:** Maven and browser suites as recorded above; final presentation/report files authored in this audit.  
 **Actual output:** Documentation is in the repository; external release activities were not executed.  
-**Evidence required:** Add real dashboard/workflow screenshots, GitHub pull request, hosted registry release, target deployment and rollback outputs before claiming full acceptance.  
+**Evidence required:** Add real dashboard/workflow screenshots, GitHub pull request, hosted registry release, target deployment and rollback outputs before claiming full acceptance.
 **Completion status:** Partial.
 
 ## Consolidated verification results
