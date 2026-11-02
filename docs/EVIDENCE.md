@@ -42,3 +42,11 @@ Still not demonstrated:
 - [x] Remote Git push: SSH-authenticated pushes of `main` and `develop` succeeded; branch search confirmed both.
 - [ ] GitHub pull request/review: connector PR creation returned HTTP 403. Use the `main...develop` comparison link in `evidence/github-push-summary.txt` or grant Pull Requests write access to the connector.
 - [ ] Final Windows-host browser check; the portal was checked through the WSL Docker network only.
+
+Render hosting preparation on 2026-11-02:
+
+- [x] Parsed `render.yaml` with PyYAML; it defines `vendor-portal-api` (Docker, free) and `vendor-portal-web` (static, free).
+- [x] Built the Vite production frontend with `VITE_API_BASE_URL=https://vendor-portal-api.onrender.com`; the expected API hostname was present in the generated bundle.
+- [x] Ran `scripts/run-integration.ps1` after adding Render URL configuration and Spring CORS support: Compose backend/frontend/MySQL healthy, Maven 4/4 unit tests passed, Selenium 5/5 passed, and Playwright 6/6 passed.
+- [x] Fixed a Selenium setup wait that could read a React heading after its node was replaced; the final Selenium rerun passed in 28.46 seconds.
+- [ ] Public Render deployment remains pending: no Render or Aiven account authorization is configured. The Blueprint requires an Aiven free MySQL service because Render's free database offering is PostgreSQL.

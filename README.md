@@ -58,6 +58,12 @@ The Jenkinsfile runs backend verification, frontend install/build, archives pack
 
 Ansible inventory is a safe example placeholder (`192.0.2.10`). Configure it for a host you control. See [deployment notes](docs/DEPLOYMENT.md).
 
+### Free Render demo hosting
+
+The repository includes a Render Blueprint in `render.yaml` for a free static frontend and free Docker backend. Render does not offer free MySQL, so create a free MySQL service with Aiven first; free Aiven MySQL is limited to 1 CPU, 1 GB RAM, and 1 GB storage, and may be powered off after inactivity. In the Render dashboard, create a Blueprint from this public GitHub repository and enter the Aiven JDBC URL (including `sslMode=REQUIRED`), database username, and password when prompted. The Blueprint generates the portal admin password and configures the API origin for the two named Render services. If Render requires different service hostnames, update `APP_CORS_ORIGINS` on `vendor-portal-api` and `VITE_API_BASE_URL` on `vendor-portal-web` to the actual service URLs, then redeploy both. Free Render web services sleep after 15 minutes without traffic; first request after sleep can take about a minute. This is a coursework/demo host, not production availability.
+
+Render account authorization and Aiven account creation are required to publish the service; no account credentials or database secrets belong in Git or chat. See [Render deployment notes](docs/RENDER.md).
+
 To execute the pipeline without external credentials, run `scripts/run-local-ci.ps1`. It launches a local Jenkins controller and registry inside WSL, runs the `develop` pipeline, and publishes images only to the local registry. See [the CI harness guide](ci/jenkins/README.md).
 
 ## GitHub
