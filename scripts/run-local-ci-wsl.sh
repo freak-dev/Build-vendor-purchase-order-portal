@@ -29,7 +29,11 @@ chown -R 1000:1000 "$work_root"
 mkdir -p "$work_root/jenkins"
 chown -R 1000:1000 "$work_root/jenkins"
 
+compose_cli='/usr/libexec/docker/cli-plugins/docker-compose'
+[[ -x "$compose_cli" ]] || { echo 'The host Docker Compose plugin was not found.' >&2; exit 1; }
+cp "$compose_cli" "$source_repo/ci/jenkins/docker-compose"
 docker build -f "$source_repo/ci/jenkins/Dockerfile" -t "$jenkins_image" "$source_repo/ci/jenkins"
+rm -f "$source_repo/ci/jenkins/docker-compose"
 docker rm -f "$jenkins_container" "$registry_container" >/dev/null 2>&1 || true
 docker run -d --name "$registry_container" --restart unless-stopped --network host \
   -e REGISTRY_HTTP_ADDR=127.0.0.1:5000 \
