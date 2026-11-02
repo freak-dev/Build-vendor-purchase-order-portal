@@ -134,8 +134,10 @@ pipeline {
       }
       steps {
         sh 'ansible-galaxy collection install -r ansible/requirements.yml'
-        sshagent(credentials: ['deploy-ssh-key']) {
-          sh 'ansible-playbook -i ansible/inventory/hosts.yml ansible/playbooks/deploy.yml --limit "$DEPLOY_TARGET" --extra-vars "release_tag=$TAG registry_namespace=$REGISTRY_NAMESPACE"'
+        withCredentials([file(credentialsId: 'deploy-become-password-file', variable: 'ANSIBLE_BECOME_PASSWORD_FILE')]) {
+          sshagent(credentials: ['deploy-ssh-key']) {
+            sh 'ansible-playbook -i ansible/inventory/hosts.yml ansible/playbooks/deploy.yml --limit "$DEPLOY_TARGET" --become-password-file "$ANSIBLE_BECOME_PASSWORD_FILE" --extra-vars "release_tag=$TAG registry_namespace=$REGISTRY_NAMESPACE"'
+          }
         }
       }
     }
