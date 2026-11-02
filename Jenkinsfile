@@ -142,7 +142,15 @@ pipeline {
   post {
     always {
       junit testResults: 'backend/target/surefire-reports/*.xml,backend/target/failsafe-reports/*.xml', allowEmptyResults: true
-      archiveArtifacts artifacts: 'backend/target/selenium-screenshots/*.png', allowEmptyArchive: true
+      script {
+        def screenshots = sh(
+          script: 'find backend/target/selenium-screenshots -maxdepth 1 -name "*.png" -print -quit 2>/dev/null || true',
+          returnStdout: true
+        ).trim()
+        if (screenshots) {
+          archiveArtifacts artifacts: 'backend/target/selenium-screenshots/*.png', fingerprint: true
+        }
+      }
     }
     success { echo "Build ${env.BUILD_NUMBER} completed." }
     failure { echo 'Build failed; image publication and deployment are gated on successful prior stages.' }

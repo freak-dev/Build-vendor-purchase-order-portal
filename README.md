@@ -62,10 +62,9 @@ To execute the pipeline without external credentials, run `scripts/run-local-ci.
 
 ## GitHub
 
-Repository branches: `main`, `develop`, `feature/authentication`, `feature/vendor-management`, `feature/product-catalogue`, `feature/purchase-orders`, `feature/inventory`, `feature/dashboard`, `devops/jenkins-pipeline`, `devops/docker-deployment`. Create them after initializing remote repository as appropriate. No remote repository or push is claimed.
+Local branches: `main` and `develop`. The `origin` remote is configured as `https://github.com/freak-dev/Build-vendor-purchase-order-portal.git`. The GitHub repository is public but empty; the connected GitHub integration currently returns HTTP 403 for contents writes, so no remote branch push or pull request is claimed. Named feature and DevOps branches in the coursework checklist were not fabricated as historical work.
 
 ```powershell
-git remote add origin https://github.com/<your-account>/vendor-purchase-order-portal.git
 git push -u origin main
 git push origin develop
 ```

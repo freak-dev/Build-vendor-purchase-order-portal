@@ -16,13 +16,16 @@ The repeatable WSL integration run is `scripts/run-integration.ps1`. Playwright 
 
 Additional audit attempts on 2026-11-02:
 
-- [x] GitHub remote set to `https://github.com/freak-dev/Build-vendor-purchase-order-portal.git`; repository inspection confirmed a public, empty repository. GitHub integration file creation returned HTTP 403 `Resource not accessible by integration`, so no branch push or PR was made.
-- [x] Local Jenkins 2.580.2 and Registry v2 containers started in WSL; job `vendor-portal-ci` was initialized. Jenkins Build 1 ran and failed Jenkinsfile validation (`timestamps()` option unavailable in installed plugins). The compatibility fix is committed locally. A later run was attempted, but no final successful build result was verified.
-- [x] Jenkins trigger parameters requested local publishing (`PUBLISH_IMAGES=true`, registry `localhost:5000`, namespace `vendor`); without a verified successful pipeline, no published image/digest is claimed.
+- [x] GitHub remote set to `https://github.com/freak-dev/Build-vendor-purchase-order-portal.git`; repository inspection confirmed a public, empty repository. GitHub integration file creation still returns HTTP 403 `Resource not accessible by integration`, so no branch push or PR was made.
+- [x] Clean local Jenkins 2.580.2 controller started in WSL and `vendor-portal-ci` Build 1 completed with `SUCCESS`. A prior Jenkins-home attempt failed validation because `timestamps()` was unavailable; that compatibility issue was corrected, and a fresh home was used for the verified run.
+- [x] Jenkins Maven unit tests: 4 run, 0 failures/errors. Jenkins Selenium Failsafe: 5 run, 0 failures/errors (23.69 seconds). Frontend `npm ci`/Vite production build passed.
+- [x] Jenkins archived `backend/target/vendor-purchase-order-portal-1.0.0.jar` (65,693,412 bytes), `frontend/dist/index.html`, and `published-images.txt`. The optional Selenium screenshot glob was empty on a successful run; Jenkins printed a warning for that empty glob.
+- [x] Jenkins published backend image `localhost:5000/vendor/vendor-purchase-order-portal-backend:1` (digest `sha256:46ebeb32d51fa1e55de478c85fecce21a40f7aab76938ab7d906d2c6abf259fb`) and frontend image `localhost:5000/vendor/vendor-purchase-order-portal-frontend:1` (digest `sha256:accfbf83605b742c6afc62d8ca78b9e64daa338050360ee206628d6de2bdebff`). Registry catalog and tag endpoints confirmed both at tag `1`.
+- [x] Jenkins deployment stage was skipped by its target condition; no external deployment is claimed.
 
 Still not demonstrated:
 
-- [ ] Successful Jenkins build, test report archive, or registry image publication. Build 1 failed before testing; later completion was unverified.
+- [ ] Publishing to a hosted registry such as Docker Hub; this verified publish used the local Registry v2 only.
 - [ ] Ansible deployment or rollback rehearsal against another machine; the checked-in inventory intentionally uses the documentation-only address `192.0.2.10`.
 - [ ] Remote Git push or GitHub pull request. `origin` is configured, but the connected GitHub integration rejected the write with HTTP 403.
 - [ ] Final Windows-host browser check; the portal was checked through the WSL Docker network only.
