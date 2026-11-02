@@ -20,7 +20,7 @@ if ! git config --global --get-all safe.directory | grep -Fxq "$project/.git"; t
   git config --global --add safe.directory "$project/.git"
 fi
 if [[ ! -e "$source_repo/.git" ]]; then
-  git clone --local "$project" "$source_repo"
+  git clone --no-local "$project" "$source_repo"
 fi
 git -C "$source_repo" fetch --all --prune
 git -C "$source_repo" checkout develop
