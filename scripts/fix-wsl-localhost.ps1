@@ -13,7 +13,21 @@ if (-not $wslIp) { throw 'Ubuntu WSL returned no IPv4 address.' }
 
 $listenAddress = '127.0.0.1'
 $port = 8088
-& netsh.exe interface portproxy delete v4tov4 listenaddress=$listenAddress listenport=$port 2>$null | Out-Null
+$rules = & netsh.exe interface portproxy show v4tov4
+$existing = $rules | Where-Object { $_ -match '^\s*127\.0\.0\.1\s+8088\s+(\S+)\s+(\d+)\s*$' } | Select-Object -First 1
+if ($existing -and $existing -match '^\s*127\.0\.0\.1\s+8088\s+(\S+)\s+(\d+)\s*$') {
+  $oldTarget = $Matches[1]
+  $oldPort = $Matches[2]
+  if ($oldTarget -eq $wslIp -and $oldPort -eq "$port") {
+    Write-Output "http://localhost:$port is already forwarded to Ubuntu WSL at $wslIp`:$port."
+    exit 0
+  }
+  if ($oldPort -ne "$port" -or $oldTarget -notmatch '^172\.(1[6-9]|2[0-9]|3[01])\.') {
+    throw "Refusing to replace an unrelated localhost port forward (127.0.0.1:$port -> $oldTarget`:$oldPort)."
+  }
+  & netsh.exe interface portproxy delete v4tov4 listenaddress=$listenAddress listenport=$port | Out-Null
+  if ($LASTEXITCODE -ne 0) { throw 'Could not remove the stale WSL localhost port forward.' }
+}
 & netsh.exe interface portproxy add v4tov4 listenaddress=$listenAddress listenport=$port connectaddress=$wslIp connectport=$port
 if ($LASTEXITCODE -ne 0) { throw 'Windows could not create the localhost port forward.' }
 
