@@ -19,6 +19,9 @@ mkdir -p "$work_root"
 if ! git config --global --get-all safe.directory | grep -Fxq "$project/.git"; then
   git config --global --add safe.directory "$project/.git"
 fi
+if ! git config --global --get-all safe.directory | grep -Fxq "$source_repo"; then
+  git config --global --add safe.directory "$source_repo"
+fi
 if [[ ! -e "$source_repo/.git" ]]; then
   git clone --no-local "$project" "$source_repo"
 fi
