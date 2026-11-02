@@ -17,6 +17,8 @@ A DevOps-enabled procurement MVP for managing suppliers, catalogue items, stock,
 4. Visit http://localhost:8088. Sign in with `ADMIN_USERNAME` and `ADMIN_PASSWORD` from `.env`.
 5. Stop with `docker compose down`; preserve the database with its named volume. Remove stored data only with `docker compose down -v`.
 
+With Docker Engine inside Ubuntu WSL, start the stack with `scripts/start-compose-wsl.sh`. If Windows `localhost` forwarding is unavailable, find the current WSL address with `wsl.exe -d Ubuntu -- hostname -I` and open `http://<WSL-IP>:8088` in the Windows browser. WSL addresses can change after restarting the distro.
+
 The default Compose port is 8088. The backend and database are internal services; MySQL is not published to the host. The health endpoint is `/actuator/health`, and OpenAPI is at `/swagger-ui.html`.
 
 ## Local development

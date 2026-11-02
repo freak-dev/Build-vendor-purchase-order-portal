@@ -18,6 +18,7 @@ Latest local launch on 2026-11-02:
 - [x] Docker Compose `--wait` reported MySQL, backend, and frontend healthy.
 - [x] `curl http://127.0.0.1:8088/actuator/health` returned `{"status":"UP"}`; `curl http://127.0.0.1:8088/` returned HTTP 200 (`text/html`).
 - [x] The portal is available at `http://localhost:8088` while the Ubuntu WSL distro and Docker Engine are running. No external hosting is configured.
+- [x] After WSL restarted, its Docker containers were stopped. Compose was started again and all three services returned healthy. Windows could reach the portal at the current Ubuntu WSL address `http://172.29.59.159:8088/` (HTTP 200) and its health endpoint (HTTP 200, `{"status":"UP"}`). Windows `localhost:8088` remained refused because localhost forwarding is unavailable in this environment; use the WSL IP for this session.
 
 The repeatable WSL integration run is `scripts/run-integration.ps1`. Playwright writes its HTML report and test artifacts under `frontend/playwright-report` and failure screenshots are retained under `backend/target/selenium-screenshots`.
 
