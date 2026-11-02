@@ -58,6 +58,8 @@ The Jenkinsfile runs backend verification, frontend install/build, archives pack
 
 Ansible inventory is a safe example placeholder (`192.0.2.10`). Configure it for a host you control. See [deployment notes](docs/DEPLOYMENT.md).
 
+To execute the pipeline without external credentials, run `scripts/run-local-ci.ps1`. It launches a local Jenkins controller and registry inside WSL, runs the `develop` pipeline, and publishes images only to the local registry. See [the CI harness guide](ci/jenkins/README.md).
+
 ## GitHub
 
 Repository branches: `main`, `develop`, `feature/authentication`, `feature/vendor-management`, `feature/product-catalogue`, `feature/purchase-orders`, `feature/inventory`, `feature/dashboard`, `devops/jenkins-pipeline`, `devops/docker-deployment`. Create them after initializing remote repository as appropriate. No remote repository or push is claimed.
