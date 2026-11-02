@@ -2,7 +2,7 @@ FROM jenkins/jenkins:lts-jdk21
 
 USER root
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends docker.io git curl ca-certificates python3 python3-pip ansible \
+    && apt-get install -y --no-install-recommends docker-cli git curl ca-certificates python3 python3-pip ansible \
     && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /usr/local/lib/docker/cli-plugins
