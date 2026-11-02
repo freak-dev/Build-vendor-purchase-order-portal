@@ -18,7 +18,7 @@ Additional audit attempts on 2026-11-02:
 
 - Jenkins Build 2's recorded console/test/artifact/registry summary is preserved in [`evidence/jenkins-build-2-summary.txt`](evidence/jenkins-build-2-summary.txt).
 
-- [x] GitHub remote set to `https://github.com/freak-dev/Build-vendor-purchase-order-portal.git`; repository inspection confirmed a public, empty repository. GitHub integration file creation still returns HTTP 403 `Resource not accessible by integration`, so no branch push or PR was made.
+- [x] GitHub remote set to `git@github.com:freak-dev/Build-vendor-purchase-order-portal.git`; repository inspection confirmed a public, empty repository. Integration writes return HTTP 403. Read-only SSH check found no host key and no local SSH key/agent, so no branch push or PR was made.
 - [x] Clean local Jenkins 2.580.2 controller started in WSL and `vendor-portal-ci` Builds 1 and 2 completed with `SUCCESS`. A prior Jenkins-home attempt failed validation because `timestamps()` was unavailable; that compatibility issue was corrected and a separate clean Jenkins home is used.
 - [x] Each successful Jenkins build passed Maven unit tests (4 run, 0 failures/errors) and Selenium Failsafe (5 run, 0 failures/errors); Build 2 Selenium took 27.02 seconds. Frontend `npm ci`/Vite production build passed.
 - [x] Jenkins archived `backend/target/vendor-purchase-order-portal-1.0.0.jar` (65,693,412 bytes), `frontend/dist/index.html`, and `published-images.txt`. Build 2 confirmed the optional screenshot archive is skipped cleanly when there are no failure screenshots.
