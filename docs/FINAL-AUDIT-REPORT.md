@@ -89,8 +89,8 @@ The assignment is **not fully complete against its end-to-end acceptance criteri
 ### 8. Pipeline as Code and deployment — PARTIAL
 
 **Task description:** Keep pipeline/deployment configuration as code and run a deployment.  
-**Implementation:** Jenkinsfile contains checkout, build/test, package, Docker publication, and an Ansible deployment stage gated on a configured target and prior stage success. The deploy stage installs the pinned `community.docker` collection, limits execution to the requested inventory group, and reads the sudo password from a Jenkins Secret file credential.  
-**Files:** `Jenkinsfile`, `ansible/requirements.yml`, `ansible/playbooks/deploy.yml`, `ansible/templates/docker-compose.deploy.yml.j2`, `docs/DEPLOYMENT.md`.  
+**Implementation:** Jenkinsfile contains checkout, build/test, package, Docker publication, and an Ansible deployment stage gated on a configured target and prior stage success. The deploy stage installs the pinned `community.docker` collection, limits execution to the requested inventory group, and reads the sudo password from a Jenkins Secret file credential.
+**Files:** `Jenkinsfile`, `ansible/requirements.yml`, `ansible/playbooks/deploy.yml`, `ansible/templates/docker-compose.deploy.yml.j2`, `docs/DEPLOYMENT.md`.
 **Commands executed:** Local Jenkins controller startup and pipeline trigger; Ansible syntax check recorded.
 **Actual output:** Clean-home Jenkins Build 1 ran checkout, Maven, frontend build, Selenium, packaging, and image-publish stages successfully. The deploy stage was skipped by its target gate. No target deployment was performed.
 **Evidence required:** Capture successful Jenkins stage logs and target health response after deployment.  
