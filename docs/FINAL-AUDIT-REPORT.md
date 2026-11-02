@@ -12,7 +12,7 @@
 
 The repository contains a working academic MVP and substantial local DevOps implementation. The strongest verified evidence is the local Maven build and four passing backend unit tests, five passing Selenium workflows, six passing Playwright tests, Docker Compose startup with MySQL migrations and health checks, and an Ansible syntax check. These results are recorded in `docs/EVIDENCE.md` and were produced in the local WSL/Docker environment.
 
-The assignment is **not fully complete against its end-to-end acceptance criteria**. There is no GitHub remote, Jenkins controller/build record, registry push, external Linux target, or executed rollback rehearsal. Consequently, GitHub collaboration, Jenkins CI/CD, registry release, external provisioning, and rollback are implemented as repository configuration but not demonstrated against their real services. Final result: **4 tasks complete, 11 partially complete, 0 wholly unimplemented**. “Partial” means code or documentation exists but the requested integration or evidence has not been completed.
+The assignment is **not fully complete against its end-to-end acceptance criteria**. A GitHub remote and repository are now identified, and a local Jenkins controller was brought up. However, the GitHub integration rejected a contents write (HTTP 403); the local Jenkins Build 1 failed Jenkinsfile validation, and no successful Jenkins build or registry image was verified. No external Linux target or rollback rehearsal was available. Final result remains **4 tasks complete, 11 partially complete, 0 wholly unimplemented**. “Partial” means code or documentation exists but the requested integration or evidence has not been completed.
 
 ## Task-by-task audit
 
@@ -49,11 +49,11 @@ The assignment is **not fully complete against its end-to-end acceptance criteri
 ### 4. Git and GitHub initialization — PARTIAL
 
 **Task description:** Initialize Git, branches, GitHub templates, and remote collaboration.  
-**Implementation:** Local Git repository, `main` and `develop`, `.gitignore`, contribution guide, issue template, and pull-request template are present. Named feature/devops branches are documented, but were not created. No Git remote or GitHub repository is configured.  
+**Implementation:** Local Git repository, `main` and `develop`, `.gitignore`, contribution guide, issue template, and pull-request template are present. `origin` points to the user-provided empty GitHub repository. Named feature/devops branches are documented, but were not created. The connected GitHub integration currently rejects contents writes.
 **Files:** `.git`, `.gitignore`, `CONTRIBUTING.md`, `.github/ISSUE_TEMPLATE/bug_report.md`, `.github/pull_request_template.md`, `README.md`.  
 **Commands executed:** `git branch --all --verbose`; `git remote -v`; `git log --oneline --decorate -10`.  
-**Actual output:** Local branches: `main`, `develop`. `git remote -v` produced no remote output. Latest commit: `0fee424 fix: verify Docker and browser workflows`.  
-**Evidence required:** Create the GitHub repository, add `origin`, push branches, and capture the repository/branch page and a pull request.  
+**Actual output:** Repository `https://github.com/freak-dev/Build-vendor-purchase-order-portal` exists, is public, and is empty. `origin` is set locally. GitHub repo inspection reports user-level admin/push permission, but the connected integration's file creation returned HTTP 403 `Resource not accessible by integration`; no refs have been pushed. Local `develop` now has commits through `19b303b`.
+**Evidence required:** Grant the connected GitHub integration repository contents write permission or authenticate GitHub CLI, then push branches and capture a real pull request/review.
 **Completion status:** Partial.
 
 ### 5. Feature development with branching — PARTIAL
@@ -79,11 +79,11 @@ The assignment is **not fully complete against its end-to-end acceptance criteri
 ### 7. Jenkins CI setup — PARTIAL
 
 **Task description:** Configure Jenkins and verify continuous integration.  
-**Implementation:** A declarative `Jenkinsfile` defines SCM polling, Maven verification, frontend installation/build, Selenium, JUnit publishing, and artifact archiving. No Jenkins controller or agent is configured in this workspace.  
+**Implementation:** A declarative `Jenkinsfile` defines SCM polling, Maven verification, frontend installation/build, Selenium, JUnit publishing, artifact archiving, and parameterized registry/deploy gates. A local Jenkins controller and local Registry v2 were started in WSL. The pipeline job initialized and Build 1 was triggered.
 **Files:** `Jenkinsfile`, `docs/DEPLOYMENT.md`.  
-**Commands executed:** Reviewed Jenkinsfile and deployment instructions; no Jenkins build command was available.  
-**Actual output:** Pipeline configuration exists; there is no Jenkins build number, console log, or published report. SCM polling is configured in code at five-minute intervals; a GitHub webhook is not configured.  
-**Evidence required:** Configure Jenkins, create the Multibranch Pipeline, add required credentials, run a build, and capture console output and test reports.  
+**Commands executed:** `scripts/run-local-ci.ps1` (local Jenkins/Registry bootstrap and build trigger).
+**Actual output:** Jenkins 2.580.2 started at `http://localhost:8081`; job `vendor-portal-ci` was created. Build 1 was recorded and failed during Jenkinsfile validation because the controller did not have the Timestamper plugin. That directive has since been removed. A subsequent rerun did not return a verified final build result before this report was updated. No successful build/test report is claimed. SCM polling is configured for five-minute intervals; GitHub webhook is not configured.
+**Evidence required:** Rerun the pipeline and capture a successful build number, console output, and archived reports.
 **Completion status:** Partial.
 
 ### 8. Pipeline as Code and deployment — PARTIAL
@@ -91,8 +91,8 @@ The assignment is **not fully complete against its end-to-end acceptance criteri
 **Task description:** Keep pipeline/deployment configuration as code and run a deployment.  
 **Implementation:** Jenkinsfile contains checkout, build/test, package, Docker publication, Ansible deployment gates, and health checking. Deployment runs only on `main` after prior stages pass and requires a configured target.  
 **Files:** `Jenkinsfile`, `ansible/playbooks/deploy.yml`, `ansible/templates/docker-compose.deploy.yml.j2`.  
-**Commands executed:** Jenkins execution unavailable; Ansible syntax check recorded.  
-**Actual output:** Pipeline and deploy playbook are checked in. No Jenkins pipeline run or target deployment was performed.  
+**Commands executed:** Local Jenkins controller startup and pipeline trigger; Ansible syntax check recorded.
+**Actual output:** Pipeline and deploy playbook are checked in. Jenkins Build 1 failed validation; no successful pipeline run or target deployment is verified.
 **Evidence required:** Capture successful Jenkins stage logs and target health response after deployment.  
 **Completion status:** Partial.
 
@@ -112,7 +112,7 @@ The assignment is **not fully complete against its end-to-end acceptance criteri
 **Implementation:** Jenkinsfile runs Maven verification and Selenium before package/image/deployment stages. Jenkins declarative stage ordering gates later stages on success.  
 **Files:** `Jenkinsfile`, `backend/pom.xml`.  
 **Commands executed:** Inspected pipeline; local Selenium command is documented above. Jenkins execution was unavailable.  
-**Actual output:** Local tests pass; no Jenkins test report exists. No deliberate defect/failing Jenkins build and correction/rerun evidence is checked into the repository.  
+**Actual output:** Jenkins Build 1 failed before tests ran (`timestamps()` declarative option unavailable). The option was removed, but no later successful Jenkins run or Jenkins test report is verified. Earlier local tests pass; no controlled application-defect/fix pair is demonstrated.
 **Evidence required:** Run Jenkins once successfully and capture a controlled failing test followed by a fixed successful build, if the assignment requires the defect demonstration.  
 **Completion status:** Partial.
 
@@ -131,8 +131,8 @@ The assignment is **not fully complete against its end-to-end acceptance criteri
 **Task description:** Build/tag/push images and deploy them through Jenkins after tests.  
 **Implementation:** Jenkinsfile has main-branch Docker build/tag/push and gated Ansible deploy stages using Jenkins credentials.  
 **Files:** `Jenkinsfile`, `Dockerfile.backend`, `Dockerfile.frontend`, `ansible/playbooks/deploy.yml`.  
-**Commands executed:** Docker images were built locally; no registry login/push or Jenkins-triggered deployment was run.  
-**Actual output:** Local Compose deployment passed. No registry image digest, Jenkins deployment log, or remote URL exists.  
+**Commands executed:** Local Registry v2 and Jenkins containers were started; pipeline was triggered with `PUBLISH_IMAGES=true`, `REGISTRY_HOST=localhost:5000`, and namespace `vendor`.
+**Actual output:** The pipeline has not produced a verified successful run. No image tag/digest was confirmed in Registry v2, and no external deployment or Jenkins deployment log exists.
 **Evidence required:** Configure registry/Jenkins credentials, push a tagged release, deploy to a controlled host, and capture image digest and health response.  
 **Completion status:** Partial.
 
@@ -177,10 +177,10 @@ The assignment is **not fully complete against its end-to-end acceptance criteri
 | Flyway | Migrations applied through v2 | Pass (recorded integration run) |
 | Ansible syntax | `playbook: plays/deploy.yml`; syntax passed with mounted config warning | Pass with warning |
 | Frontend install/build | `npm ci --no-audit --no-fund` added 98 packages in 11s; `npm run build` passed with Vite 7.3.7 and 1,637 modules transformed | Pass |
-| GitHub push/PR | No remote configured | Not run |
-| Jenkins run | No Jenkins controller configured | Not run |
-| Registry push | No registry credentials configured | Not run |
-| External Ansible deploy/rollback | No authorized target configured | Not run |
+| GitHub push/PR | `origin` set to user repository; connector write returned HTTP 403; no remote refs or PR | Blocked on GitHub integration contents-write authorization or local GitHub CLI auth |
+| Jenkins | Jenkins 2.580.2 local controller and job started; Build 1 failed Jenkinsfile validation (`timestamps` option unavailable); later final result unverified | Fail / rerun needed |
+| Local registry publish | Local Registry v2 started and publish parameters supplied; no successful image/digest verified | Not demonstrated |
+| External Ansible deploy/rollback | No authorized target or SSH credential configured | Not run |
 
 ## Project acceptance gaps
 

@@ -14,9 +14,15 @@ Verified locally on 2026-11-02:
 
 The repeatable WSL integration run is `scripts/run-integration.ps1`. Playwright writes its HTML report and test artifacts under `frontend/playwright-report` and failure screenshots are retained under `backend/target/selenium-screenshots`.
 
-Not run in this workspace:
+Additional audit attempts on 2026-11-02:
 
-- [ ] Jenkins build, registry push, or Jenkins artifact archive; no Jenkins controller or registry credentials are configured.
+- [x] GitHub remote set to `https://github.com/freak-dev/Build-vendor-purchase-order-portal.git`; repository inspection confirmed a public, empty repository. GitHub integration file creation returned HTTP 403 `Resource not accessible by integration`, so no branch push or PR was made.
+- [x] Local Jenkins 2.580.2 and Registry v2 containers started in WSL; job `vendor-portal-ci` was initialized. Jenkins Build 1 ran and failed Jenkinsfile validation (`timestamps()` option unavailable in installed plugins). The compatibility fix is committed locally. A later run was attempted, but no final successful build result was verified.
+- [x] Jenkins trigger parameters requested local publishing (`PUBLISH_IMAGES=true`, registry `localhost:5000`, namespace `vendor`); without a verified successful pipeline, no published image/digest is claimed.
+
+Still not demonstrated:
+
+- [ ] Successful Jenkins build, test report archive, or registry image publication. Build 1 failed before testing; later completion was unverified.
 - [ ] Ansible deployment or rollback rehearsal against another machine; the checked-in inventory intentionally uses the documentation-only address `192.0.2.10`.
-- [ ] Remote Git push or GitHub pull request; no remote is configured.
+- [ ] Remote Git push or GitHub pull request. `origin` is configured, but the connected GitHub integration rejected the write with HTTP 403.
 - [ ] Final Windows-host browser check; the portal was checked through the WSL Docker network only.
