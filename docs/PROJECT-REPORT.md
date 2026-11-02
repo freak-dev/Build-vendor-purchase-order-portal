@@ -36,3 +36,6 @@ The repository contains an implemented procurement MVP and reproducible CI/deplo
 
 ## References
 Spring Boot, Spring Security, Spring Data and Flyway official documentation; React and Vite official documentation; MySQL 8 Reference Manual; Docker Compose documentation; Jenkins Pipeline documentation; Ansible documentation; Playwright documentation. See each project's official documentation for version-specific setup.
+
+## Final checklist audit
+See [the 15-task audit](FINAL-AUDIT-REPORT.md) for the implementation/files/commands/output/evidence/status ledger. The audit distinguishes local results from GitHub, Jenkins, registry, remote provisioning and rollback steps that were not executed.

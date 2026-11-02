@@ -12,12 +12,14 @@ The source implementation and local verification for the Vendor Purchase Order P
 ## 15-week milestone checklist
 
 - [x] Weeks 1–3: scope, requirements, architecture and environment setup.
-- [x] Weeks 4–6: Git workflow and procurement MVP.
-- [x] Weeks 7–8: Jenkins pipeline and Docker deployment configuration.
-- [x] Weeks 9–10: Selenium and Playwright tests; local end-to-end suites executed successfully.
-- [x] Weeks 11–12: Docker images and Compose services built and started locally.
-- [x] Week 13: Ansible deployment and rollback playbook implemented and syntax checked.
-- [ ] Week 14: deployment, health verification and rollback against a separate Linux target; no authorized target is configured.
-- [ ] Week 15: Jenkins run, registry publication, remote release and viva screenshots; no Jenkins controller or registry/remote credentials are configured.
+- [ ] Weeks 4–6: local Git and procurement MVP implemented; GitHub remote, named feature branches and pull-request collaboration remain unverified.
+- [ ] Weeks 7–8: Jenkinsfile and deployment configuration implemented; no Jenkins controller run or external deployment recorded.
+- [ ] Weeks 9–10: local Selenium (5) and Playwright (6) suites pass; Jenkins continuous-test run remains unverified.
+- [ ] Weeks 11–12: Docker Compose lifecycle passed locally; Jenkins registry publication and deployment remain unverified.
+- [ ] Week 13: Ansible configuration implemented and syntax checked; provisioning against a separate host remains unverified.
+- [ ] Week 14: local container health passed; no separate Linux target or rollback rehearsal is configured.
+- [ ] Week 15: final documentation and viva presentation prepared; Jenkins, registry, remote release, rollback and final runtime screenshots remain outstanding.
 
 See [execution evidence](EVIDENCE.md) for test counts and the remaining environment-dependent work.
+
+See [the final 15-task audit](FINAL-AUDIT-REPORT.md) for per-task implementation, files, commands, actual output, evidence required and completion status.
