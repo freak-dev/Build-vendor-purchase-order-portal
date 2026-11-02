@@ -1,3 +1,10 @@
+databases:
+  - name: vendor-portal-db
+    plan: free
+    region: singapore
+    databaseName: vendor_portal
+    user: portal
+
 services:
   - type: web
     name: vendor-portal-api
@@ -8,12 +15,28 @@ services:
     dockerContext: .
     healthCheckPath: /actuator/health
     envVars:
-      - key: DB_URL
-        sync: false
+      - key: DB_HOST
+        fromDatabase:
+          name: vendor-portal-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: vendor-portal-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: vendor-portal-db
+          property: database
       - key: DB_USER
-        sync: false
+        fromDatabase:
+          name: vendor-portal-db
+          property: user
       - key: DB_PASSWORD
-        sync: false
+        fromDatabase:
+          name: vendor-portal-db
+          property: password
+      - key: FLYWAY_LOCATIONS
+        value: classpath:db/migration-postgresql
       - key: ADMIN_USERNAME
         value: admin
       - key: ADMIN_PASSWORD
@@ -28,7 +51,7 @@ services:
     region: singapore
     rootDir: frontend
     buildCommand: npm ci && npm run build
-    staticPublishPath: frontend/dist
+    staticPublishPath: dist
     envVars:
       - key: VITE_API_BASE_URL
         value: https://vendor-portal-api.onrender.com

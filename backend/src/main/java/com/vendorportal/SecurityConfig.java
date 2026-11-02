@@ -23,7 +23,7 @@ import org.springframework.boot.CommandLineRunner;
 class SecurityConfig {
   @Bean PasswordEncoder passwordEncoder(){return new BCryptPasswordEncoder();}
   @Bean AuthenticationManager authenticationManager(AuthenticationConfiguration c) throws Exception { return c.getAuthenticationManager(); }
-  @Bean UserDetailsService users(JdbcTemplate db){JdbcUserDetailsManager manager=new JdbcUserDetailsManager(db.getDataSource());manager.setUsersByUsernameQuery("SELECT username,password_hash,enabled FROM app_users WHERE username=? AND enabled=1");manager.setAuthoritiesByUsernameQuery("SELECT username,CONCAT('ROLE_',role) FROM app_users WHERE username=? AND enabled=1");return manager;}
+  @Bean UserDetailsService users(JdbcTemplate db){JdbcUserDetailsManager manager=new JdbcUserDetailsManager(db.getDataSource());manager.setUsersByUsernameQuery("SELECT username,password_hash,enabled FROM app_users WHERE username=? AND enabled=TRUE");manager.setAuthoritiesByUsernameQuery("SELECT username,CONCAT('ROLE_',role) FROM app_users WHERE username=? AND enabled=TRUE");return manager;}
   @Bean CorsConfigurationSource corsConfigurationSource(){
     CorsConfiguration config=new CorsConfiguration();
     String origins=System.getenv("APP_CORS_ORIGINS");
