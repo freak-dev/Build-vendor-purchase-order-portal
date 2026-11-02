@@ -16,11 +16,13 @@ The repeatable WSL integration run is `scripts/run-integration.ps1`. Playwright 
 
 Additional audit attempts on 2026-11-02:
 
+- Jenkins Build 2's recorded console/test/artifact/registry summary is preserved in [`evidence/jenkins-build-2-summary.txt`](evidence/jenkins-build-2-summary.txt).
+
 - [x] GitHub remote set to `https://github.com/freak-dev/Build-vendor-purchase-order-portal.git`; repository inspection confirmed a public, empty repository. GitHub integration file creation still returns HTTP 403 `Resource not accessible by integration`, so no branch push or PR was made.
-- [x] Clean local Jenkins 2.580.2 controller started in WSL and `vendor-portal-ci` Build 1 completed with `SUCCESS`. A prior Jenkins-home attempt failed validation because `timestamps()` was unavailable; that compatibility issue was corrected, and a fresh home was used for the verified run.
-- [x] Jenkins Maven unit tests: 4 run, 0 failures/errors. Jenkins Selenium Failsafe: 5 run, 0 failures/errors (23.69 seconds). Frontend `npm ci`/Vite production build passed.
-- [x] Jenkins archived `backend/target/vendor-purchase-order-portal-1.0.0.jar` (65,693,412 bytes), `frontend/dist/index.html`, and `published-images.txt`. The optional Selenium screenshot glob was empty on a successful run; Jenkins printed a warning for that empty glob.
-- [x] Jenkins published backend image `localhost:5000/vendor/vendor-purchase-order-portal-backend:1` (digest `sha256:46ebeb32d51fa1e55de478c85fecce21a40f7aab76938ab7d906d2c6abf259fb`) and frontend image `localhost:5000/vendor/vendor-purchase-order-portal-frontend:1` (digest `sha256:accfbf83605b742c6afc62d8ca78b9e64daa338050360ee206628d6de2bdebff`). Registry catalog and tag endpoints confirmed both at tag `1`.
+- [x] Clean local Jenkins 2.580.2 controller started in WSL and `vendor-portal-ci` Builds 1 and 2 completed with `SUCCESS`. A prior Jenkins-home attempt failed validation because `timestamps()` was unavailable; that compatibility issue was corrected and a separate clean Jenkins home is used.
+- [x] Each successful Jenkins build passed Maven unit tests (4 run, 0 failures/errors) and Selenium Failsafe (5 run, 0 failures/errors); Build 2 Selenium took 27.02 seconds. Frontend `npm ci`/Vite production build passed.
+- [x] Jenkins archived `backend/target/vendor-purchase-order-portal-1.0.0.jar` (65,693,412 bytes), `frontend/dist/index.html`, and `published-images.txt`. Build 2 confirmed the optional screenshot archive is skipped cleanly when there are no failure screenshots.
+- [x] Jenkins published backend image `localhost:5000/vendor/vendor-purchase-order-portal-backend:2` (digest `sha256:46ebeb32d51fa1e55de478c85fecce21a40f7aab76938ab7d906d2c6abf259fb`) and frontend image `localhost:5000/vendor/vendor-purchase-order-portal-frontend:2` (digest `sha256:accfbf83605b742c6afc62d8ca78b9e64daa338050360ee206628d6de2bdebff`). Registry tag endpoints confirmed both repositories at tags `1` and `2`.
 - [x] Jenkins deployment stage was skipped by its target condition; no external deployment is claimed.
 
 Still not demonstrated:
