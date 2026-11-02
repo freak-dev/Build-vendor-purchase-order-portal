@@ -12,6 +12,13 @@ Verified locally on 2026-11-02:
 - [x] `git diff --check` passed after the audit documentation changes.
 - [x] Ansible deployment playbook syntax checked against the sample inventory; a mounted-config warning was emitted.
 
+Latest local launch on 2026-11-02:
+
+- [x] `wsl.exe -d Ubuntu -u root -- bash -lc 'bash /mnt/c/Users/areyy/OneDrive/Documents/ChatGPT/Vendor-Purchase-Order-Portal/scripts/start-compose-wsl.sh'` rebuilt the backend/frontend Docker images and started the project with the existing WSL-only secret file.
+- [x] Docker Compose `--wait` reported MySQL, backend, and frontend healthy.
+- [x] `curl http://127.0.0.1:8088/actuator/health` returned `{"status":"UP"}`; `curl http://127.0.0.1:8088/` returned HTTP 200 (`text/html`).
+- [x] The portal is available at `http://localhost:8088` while the Ubuntu WSL distro and Docker Engine are running. No external hosting is configured.
+
 The repeatable WSL integration run is `scripts/run-integration.ps1`. Playwright writes its HTML report and test artifacts under `frontend/playwright-report` and failure screenshots are retained under `backend/target/selenium-screenshots`.
 
 Additional audit attempts on 2026-11-02:
