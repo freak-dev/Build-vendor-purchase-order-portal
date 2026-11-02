@@ -133,8 +133,9 @@ pipeline {
         }
       }
       steps {
+        sh 'ansible-galaxy collection install -r ansible/requirements.yml'
         sshagent(credentials: ['deploy-ssh-key']) {
-          sh 'ansible-playbook -i ansible/inventory/hosts.yml ansible/playbooks/deploy.yml --extra-vars "release_tag=$TAG registry_namespace=$REGISTRY_NAMESPACE"'
+          sh 'ansible-playbook -i ansible/inventory/hosts.yml ansible/playbooks/deploy.yml --limit "$DEPLOY_TARGET" --extra-vars "release_tag=$TAG registry_namespace=$REGISTRY_NAMESPACE"'
         }
       }
     }
