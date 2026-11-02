@@ -1,38 +1,23 @@
-# Implementation Plan
+# Delivery status
 
-## Environment baseline
+The source implementation and local verification for the Vendor Purchase Order Portal are complete. This checklist tracks the coursework milestones and distinguishes local work from steps that require an external service or target.
 
-- Windows PowerShell 7.6.5
-- Node.js v24.14.1 and npm 11.11.0
-- Git 2.53.0, Python 3.14
-- Java, Maven, Docker and Ansible are not installed
-- Empty Git repository on `master`; no project files or `AGENTS.md`
+## Environment and source
 
-## Delivery sequence
-
-1. Define requirements, architecture, environment setup and project conventions.
-2. Implement the Spring Boot API, MySQL schema and Flyway migrations, authentication, and role authorization.
-3. Implement vendor, product, purchase order, inventory, alert and reporting modules, plus the React application.
-4. Add unit, integration and Selenium tests.
-5. Add Jenkins CI/CD, Docker Compose, Nginx, Ansible deployment, health checks and rollback.
-6. Complete installation guides, SRS, diagrams, college report and evidence checklist.
+- [x] Windows workspace initialized as a Git repository with `main` and `develop` branches.
+- [x] Java 21 and Maven 3.9 installed as portable workspace tools; Node.js 24/npm available.
+- [x] Ubuntu WSL2, Docker Engine/Compose, Ansible Core, and `community.docker` installed.
+- [x] Spring Boot API, MySQL schema/migrations, role-aware authentication, React client, and documentation implemented.
 
 ## 15-week milestone checklist
 
-- [ ] Week 1: Problem definition and scope.
-- [ ] Week 2: Agile planning and DevOps workflow.
-- [ ] Week 3: Requirements, architecture and environment setup.
-- [ ] Week 4: Git and GitHub repository initialization.
-- [ ] Week 5: First feature development with branching.
-- [ ] Week 6: Complete MVP and Git collaboration.
-- [ ] Week 7: Jenkins installation and CI.
-- [ ] Week 8: Jenkinsfile and application deployment.
-- [ ] Week 9: Selenium test design and local execution.
-- [ ] Week 10: Continuous testing in Jenkins.
-- [ ] Week 11: Docker image and container lifecycle.
-- [ ] Week 12: Jenkins-Docker continuous deployment.
-- [ ] Week 13: Ansible configuration management.
-- [ ] Week 14: Automated provisioning, health checks and rollback.
-- [ ] Week 15: Final release, documentation and viva preparation.
+- [x] Weeks 1–3: scope, requirements, architecture and environment setup.
+- [x] Weeks 4–6: Git workflow and procurement MVP.
+- [x] Weeks 7–8: Jenkins pipeline and Docker deployment configuration.
+- [x] Weeks 9–10: Selenium and Playwright tests; local end-to-end suites executed successfully.
+- [x] Weeks 11–12: Docker images and Compose services built and started locally.
+- [x] Week 13: Ansible deployment and rollback playbook implemented and syntax checked.
+- [ ] Week 14: deployment, health verification and rollback against a separate Linux target; no authorized target is configured.
+- [ ] Week 15: Jenkins run, registry publication, remote release and viva screenshots; no Jenkins controller or registry/remote credentials are configured.
 
-Deployment, builds and test evidence must be recorded only after the required tooling and target environment are available and actual runs have completed.
+See [execution evidence](EVIDENCE.md) for test counts and the remaining environment-dependent work.

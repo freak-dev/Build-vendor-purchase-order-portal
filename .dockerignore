@@ -1,0 +1,13 @@
+.git
+.tools
+.env
+.env.*
+**/node_modules
+**/target
+**/dist
+**/playwright-report
+**/test-results
+.github
+docs
+scripts
+ansible
