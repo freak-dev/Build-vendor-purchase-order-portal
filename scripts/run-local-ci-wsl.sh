@@ -31,6 +31,9 @@ git -C "$source_repo" reset --hard origin/develop 2>/dev/null || git -C "$source
 chown -R 1000:1000 "$work_root"
 mkdir -p "$work_root/jenkins"
 chown -R 1000:1000 "$work_root/jenkins"
+mkdir -p "$work_root/jenkins/init.groovy.d"
+cp "$source_repo/ci/jenkins/init.groovy.d/create-job.groovy" "$work_root/jenkins/init.groovy.d/create-job.groovy"
+chown 1000:1000 "$work_root/jenkins/init.groovy.d/create-job.groovy"
 
 compose_cli='/usr/libexec/docker/cli-plugins/docker-compose'
 [[ -x "$compose_cli" ]] || { echo 'The host Docker Compose plugin was not found.' >&2; exit 1; }
