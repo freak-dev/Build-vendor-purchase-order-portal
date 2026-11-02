@@ -62,7 +62,7 @@ To execute the pipeline without external credentials, run `scripts/run-local-ci.
 
 ## GitHub
 
-Local branches: `main` and `develop`. The `origin` remote is configured as `git@github.com:freak-dev/Build-vendor-purchase-order-portal.git`. The GitHub repository is public but empty. No SSH key is available in Windows or WSL yet, and the connected GitHub integration returns HTTP 403 for contents writes, so no remote branch push or pull request is claimed. Named feature and DevOps branches in the coursework checklist were not fabricated as historical work.
+Local branches: `main` and `develop`. The `origin` remote is configured as `git@github.com:freak-dev/Build-vendor-purchase-order-portal.git`. A project-specific Ed25519 SSH key is configured locally; its public key must be added to the GitHub account before the empty repository can be populated. The connected GitHub integration returns HTTP 403 for contents writes. No remote branch push or pull request is claimed yet. Named feature and DevOps branches in the coursework checklist were not fabricated as historical work.
 
 ```powershell
 git push -u origin main

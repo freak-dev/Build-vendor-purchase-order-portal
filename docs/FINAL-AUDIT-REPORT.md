@@ -49,11 +49,11 @@ The assignment is **not fully complete against its end-to-end acceptance criteri
 ### 4. Git and GitHub initialization — PARTIAL
 
 **Task description:** Initialize Git, branches, GitHub templates, and remote collaboration.  
-**Implementation:** Local Git repository, `main` and `develop`, `.gitignore`, contribution guide, issue template, and pull-request template are present. `origin` points to the user-provided empty GitHub repository using the SSH URL. Named feature/devops branches are documented, but were not created. The connected GitHub integration currently rejects contents writes; SSH authentication is not configured on this machine.
+**Implementation:** Local Git repository, `main` and `develop`, `.gitignore`, contribution guide, issue template, and pull-request template are present. `origin` points to the user-provided empty GitHub repository using the SSH URL. Named feature/devops branches are documented, but were not created. The connected GitHub integration currently rejects contents writes. A project-specific SSH key is configured locally but still needs to be registered in the GitHub account.
 **Files:** `.git`, `.gitignore`, `CONTRIBUTING.md`, `.github/ISSUE_TEMPLATE/bug_report.md`, `.github/pull_request_template.md`, `README.md`.  
 **Commands executed:** `git branch --all --verbose`; `git remote -v`; `git log --oneline --decorate -10`.  
-**Actual output:** Repository `https://github.com/freak-dev/Build-vendor-purchase-order-portal` exists, is public, and remains empty. `origin` is `git@github.com:freak-dev/Build-vendor-purchase-order-portal.git`. The GitHub integration's file creation returned HTTP 403 `Resource not accessible by integration`. `git ls-remote origin` failed host-key verification; no SSH key exists in Windows `.ssh` or WSL `.ssh`, and no SSH agent is available. No refs have been pushed. Local `develop` contains the latest implementation and audit commits.
-**Evidence required:** Add a GitHub-registered public SSH key or grant the integration contents write permission, then push branches and capture a real pull request/review.
+**Actual output:** Repository `https://github.com/freak-dev/Build-vendor-purchase-order-portal` exists, is public, and remains empty. `origin` is `git@github.com:freak-dev/Build-vendor-purchase-order-portal.git`. The GitHub integration's file creation returned HTTP 403 `Resource not accessible by integration`. GitHub's published host key was verified and added to Windows `known_hosts`; an Ed25519 keypair is configured at `%USERPROFILE%\.ssh\vendor-portal-github`. SSH authentication returns `Permission denied (publickey)` until its public key is registered in GitHub. No refs have been pushed. Local `develop` contains the latest implementation and audit commits.
+**Evidence required:** Add the generated public SSH key to the GitHub account, then push branches and capture a real pull request/review.
 **Completion status:** Partial.
 
 ### 5. Feature development with branching — PARTIAL
@@ -177,7 +177,7 @@ The assignment is **not fully complete against its end-to-end acceptance criteri
 | Flyway | Migrations applied through v2 | Pass (recorded integration run) |
 | Ansible syntax | `playbook: plays/deploy.yml`; syntax passed with mounted config warning | Pass with warning |
 | Frontend install/build | `npm ci --no-audit --no-fund` added 98 packages in 11s; `npm run build` passed with Vite 7.3.7 and 1,637 modules transformed | Pass |
-| GitHub push/PR | SSH `origin` set; connector write returned HTTP 403; no SSH key/agent; no remote refs or PR | Blocked until a public key is registered in GitHub or integration write access is enabled |
+| GitHub push/PR | SSH `origin` and local key configured; connector write returned HTTP 403; GitHub has not registered the key; no remote refs or PR | Blocked until the public key is added to GitHub or integration write access is enabled |
 | Jenkins | Jenkins 2.580.2; clean-home Builds 1 and 2 `SUCCESS`; each Maven 4/4 and Selenium 5/5 | Pass |
 | Local registry publish | Backend and frontend tags `1` and `2` visible in Registry v2; Build 2 push digests recorded above | Pass (local registry only) |
 | External Ansible deploy/rollback | No authorized target or SSH credential configured; Jenkins deploy stage skipped | Not run |
