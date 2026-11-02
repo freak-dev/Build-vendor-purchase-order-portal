@@ -8,6 +8,7 @@ secret_file='/home/areyy/.config/vendor-portal/.env'
 jenkins_container='vendor-portal-jenkins'
 registry_container='vendor-portal-registry'
 jenkins_image='vendor-portal-jenkins:local'
+jenkins_home="$work_root/jenkins-clean"
 
 [[ -f "$secret_file" ]] || { echo 'Portal secret file is missing; run scripts/run-integration.ps1 first.' >&2; exit 1; }
 if ! grep -q '^JENKINS_ADMIN_PASSWORD=' "$secret_file"; then
@@ -29,11 +30,11 @@ git -C "$source_repo" fetch --all --prune
 git -C "$source_repo" checkout develop
 git -C "$source_repo" reset --hard origin/develop 2>/dev/null || git -C "$source_repo" reset --hard develop
 chown -R 1000:1000 "$work_root"
-mkdir -p "$work_root/jenkins"
-chown -R 1000:1000 "$work_root/jenkins"
-mkdir -p "$work_root/jenkins/init.groovy.d"
-cp "$source_repo/ci/jenkins/init.groovy.d/create-job.groovy" "$work_root/jenkins/init.groovy.d/create-job.groovy"
-chown 1000:1000 "$work_root/jenkins/init.groovy.d/create-job.groovy"
+mkdir -p "$jenkins_home"
+chown -R 1000:1000 "$jenkins_home"
+mkdir -p "$jenkins_home/init.groovy.d"
+cp "$source_repo/ci/jenkins/init.groovy.d/create-job.groovy" "$jenkins_home/init.groovy.d/create-job.groovy"
+chown 1000:1000 "$jenkins_home/init.groovy.d/create-job.groovy"
 
 compose_cli='/usr/libexec/docker/cli-plugins/docker-compose'
 [[ -x "$compose_cli" ]] || { echo 'The host Docker Compose plugin was not found.' >&2; exit 1; }
@@ -51,7 +52,7 @@ docker run -d --name "$jenkins_container" --restart unless-stopped --network hos
   -e JENKINS_OPTS='--httpPort=8081 --httpListenAddress=127.0.0.1' \
   -e JAVA_OPTS='-Dhudson.plugins.git.GitSCM.ALLOW_LOCAL_CHECKOUT=true' \
   -e CASC_JENKINS_CONFIG=/usr/share/jenkins/ref/casc.yaml \
-  -e JENKINS_HOME="$work_root/jenkins" \
+  -e JENKINS_HOME="$jenkins_home" \
   -e PUBLISH_IMAGES=true -e REGISTRY_HOST=localhost:5000 -e REGISTRY_NAMESPACE=vendor \
   --env-file "$secret_file" \
   -v /var/run/docker.sock:/var/run/docker.sock \
