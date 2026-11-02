@@ -12,7 +12,7 @@
 
 The repository contains a working academic MVP and substantial local DevOps implementation. The strongest verified evidence is the local Maven build and four passing backend unit tests, five passing Selenium workflows, six passing Playwright tests, Docker Compose startup with MySQL migrations and health checks, and an Ansible syntax check. These results are recorded in `docs/EVIDENCE.md` and were produced in the local WSL/Docker environment.
 
-The assignment is **not fully complete against its end-to-end acceptance criteria**. The GitHub remote is configured but its contents write is still rejected with HTTP 403, so no remote branches or PR exist. A clean local Jenkins controller completed Builds 1 and 2 successfully, ran both test suites, archived outputs, and pushed backend and frontend images to local Registry v2. No external Linux target or rollback rehearsal was available. Final result: **6 tasks complete, 9 partially complete, 0 wholly unimplemented**. “Partial” means local implementation exists but a required collaboration or external-service demonstration remains incomplete.
+The assignment is **not fully complete against its end-to-end acceptance criteria**. GitHub now contains the pushed `main` and `develop` branches. The connected integration still rejects pull-request creation with HTTP 403, so PR review/merge evidence is missing. A clean local Jenkins controller completed Builds 1 and 2 successfully, ran both test suites, archived outputs, and pushed backend and frontend images to local Registry v2. No external Linux target or rollback rehearsal was available. Final result: **6 tasks complete, 9 partially complete, 0 wholly unimplemented**. “Partial” means local implementation exists but a required collaboration or external-service demonstration remains incomplete.
 
 ## Task-by-task audit
 
@@ -49,11 +49,11 @@ The assignment is **not fully complete against its end-to-end acceptance criteri
 ### 4. Git and GitHub initialization — PARTIAL
 
 **Task description:** Initialize Git, branches, GitHub templates, and remote collaboration.  
-**Implementation:** Local Git repository, `main` and `develop`, `.gitignore`, contribution guide, issue template, and pull-request template are present. `origin` points to the user-provided empty GitHub repository using the SSH URL. Named feature/devops branches are documented, but were not created. The connected GitHub integration currently rejects contents writes. A project-specific SSH key is configured locally but still needs to be registered in the GitHub account.
-**Files:** `.git`, `.gitignore`, `CONTRIBUTING.md`, `.github/ISSUE_TEMPLATE/bug_report.md`, `.github/pull_request_template.md`, `README.md`.  
+**Implementation:** Local Git repository, `main` and `develop`, `.gitignore`, contribution guide, issue template, and pull-request template are present. `origin` points to the user's GitHub repository via SSH, and both branches are published. Named feature/DevOps branches are documented but were not created. The connected GitHub integration rejects pull-request writes.
+**Files:** `.git`, `.gitignore`, `CONTRIBUTING.md`, `.github/ISSUE_TEMPLATE/bug_report.md`, `.github/pull_request_template.md`, `README.md`, `docs/evidence/github-push-summary.txt`.
 **Commands executed:** `git branch --all --verbose`; `git remote -v`; `git log --oneline --decorate -10`.  
-**Actual output:** Repository `https://github.com/freak-dev/Build-vendor-purchase-order-portal` exists, is public, and remains empty. `origin` is `git@github.com:freak-dev/Build-vendor-purchase-order-portal.git`. The GitHub integration's file creation returned HTTP 403 `Resource not accessible by integration`. GitHub's published host key was verified and added to Windows `known_hosts`; an Ed25519 keypair is configured at `%USERPROFILE%\.ssh\vendor-portal-github`. SSH authentication returns `Permission denied (publickey)` until its public key is registered in GitHub. No refs have been pushed. Local `develop` contains the latest implementation and audit commits.
-**Evidence required:** Add the generated public SSH key to the GitHub account, then push branches and capture a real pull request/review.
+**Actual output:** Repository `https://github.com/freak-dev/Build-vendor-purchase-order-portal` is public. `origin` is `git@github.com:freak-dev/Build-vendor-purchase-order-portal.git`. SSH authenticated as `freak-dev`; `git push -u origin main` and `git push -u origin develop` both succeeded. GitHub branch search confirmed `main` and `develop`. The GitHub integration's pull-request creation returned HTTP 403 `Resource not accessible by integration`; no PR or review exists yet. The compare page is https://github.com/freak-dev/Build-vendor-purchase-order-portal/compare/main...develop?expand=1.
+**Evidence required:** Authorize GitHub Pull Requests write for the connected integration or create a PR from the comparison page, then capture review/merge evidence.
 **Completion status:** Partial.
 
 ### 5. Feature development with branching — PARTIAL
@@ -69,7 +69,7 @@ The assignment is **not fully complete against its end-to-end acceptance criteri
 ### 6. MVP completion and Git collaboration — PARTIAL
 
 **Task description:** Complete the MVP and demonstrate collaboration/merging.  
-**Implementation:** The local MVP supports user sign-in, role-aware APIs, vendor/product CRUD, purchase-order workflow, receiving and stock, dashboard, alerts, and reports. No remote pull request or collaborator review is recorded. The interface currently supports one order line at a time although the API accepts multiple lines.  
+**Implementation:** The local MVP supports user sign-in, role-aware APIs, vendor/product CRUD, purchase-order workflow, receiving and stock, dashboard, alerts, and reports. `main` and `develop` are now pushed to GitHub, but no pull request or collaborator review is recorded. The interface currently supports one order line at a time although the API accepts multiple lines.
 **Files:** `backend/src/main/java/com/vendorportal/`, `frontend/src/App.jsx`, `docs/SRS.md`, `docs/PROJECT-REPORT.md`.  
 **Commands executed:** Maven tests, Selenium and Playwright suites, and Docker Compose checks; see actual counts below and `docs/EVIDENCE.md`.  
 **Actual output:** Backend unit tests 4/4 passed; Selenium 5/5 passed; Playwright 6/6 passed in the recorded integration run.  
@@ -177,7 +177,7 @@ The assignment is **not fully complete against its end-to-end acceptance criteri
 | Flyway | Migrations applied through v2 | Pass (recorded integration run) |
 | Ansible syntax | `playbook: plays/deploy.yml`; syntax passed with mounted config warning | Pass with warning |
 | Frontend install/build | `npm ci --no-audit --no-fund` added 98 packages in 11s; `npm run build` passed with Vite 7.3.7 and 1,637 modules transformed | Pass |
-| GitHub push/PR | SSH `origin` and local key configured; connector write returned HTTP 403; GitHub has not registered the key; no remote refs or PR | Blocked until the public key is added to GitHub or integration write access is enabled |
+| GitHub push/PR | SSH authentication passed; `main` and `develop` pushed and confirmed; PR create returned HTTP 403 | PR/review blocked on GitHub Pull Requests write authorization |
 | Jenkins | Jenkins 2.580.2; clean-home Builds 1 and 2 `SUCCESS`; each Maven 4/4 and Selenium 5/5 | Pass |
 | Local registry publish | Backend and frontend tags `1` and `2` visible in Registry v2; Build 2 push digests recorded above | Pass (local registry only) |
 | External Ansible deploy/rollback | No authorized target or SSH credential configured; Jenkins deploy stage skipped | Not run |
