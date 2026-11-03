@@ -12,6 +12,8 @@ if [[ ! -f "$secret_file" ]]; then
   chown areyy:areyy "$secret_file"
   chmod 0600 "$secret_file"
 fi
+wsl_ip="$(hostname -I | awk '{print $1}')"
+export APP_CORS_ORIGINS="http://${wsl_ip}:8088,http://localhost:8088,http://127.0.0.1:8088,http://localhost:5173,http://127.0.0.1:5173"
 docker compose --env-file "$secret_file" \
   -f "$project/docker-compose.yml" \
   --project-directory "$project" up --build -d --wait --wait-timeout 300
