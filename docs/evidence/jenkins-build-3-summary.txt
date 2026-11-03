@@ -1,0 +1,27 @@
+Jenkins deployment-pipeline validation — 2026-11-02
+====================================================
+
+Controller: Jenkins 2.580.2 in local Ubuntu WSL
+Job: vendor-portal-ci
+Build: 3
+Source branch: develop
+Source commit: 022f12b (docs: clean deployment audit formatting)
+Result: SUCCESS
+
+Verified stages: checkout, Maven unit tests, frontend install/build, Selenium,
+packaging, Docker build and local Registry v2 publishing.
+
+Test results:
+  Maven: 4 tests, 0 failures, 0 errors
+  Selenium Failsafe: 5 tests, 0 failures, 0 errors (28.15 seconds)
+  Frontend npm ci and Vite production build: passed
+
+Published image references:
+  localhost:5000/vendor/vendor-purchase-order-portal-backend:3
+    digest: sha256:46ebeb32d51fa1e55de478c85fecce21a40f7aab76938ab7d906d2c6abf259fb
+  localhost:5000/vendor/vendor-purchase-order-portal-frontend:3
+    digest: sha256:accfbf83605b742c6afc62d8ca78b9e64daa338050360ee206628d6de2bdebff
+
+The deploy stage was skipped because `DEPLOY_TARGET` was empty. This build
+validates the declarative pipeline and all pre-deployment stages; it does not
+verify Ansible against an external host or exercise rollback.

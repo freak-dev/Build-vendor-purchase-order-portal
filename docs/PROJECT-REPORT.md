@@ -20,19 +20,22 @@ The MVP contains Admin, Purchase Manager and Inventory Manager permissions, a ve
 See [SRS](SRS.md), [architecture and ER diagram](ARCHITECTURE.md), and [API guide](API.md). Runtime components are the browser, Nginx, Spring Boot, MySQL and Flyway; CI uses Jenkins and deployment configuration uses Docker and Ansible.
 
 ## DevOps lifecycle
-Plan requirements and weekly milestones; code through focused Git branches; build Maven and Vite artifacts; test with JUnit/Spring Boot and Playwright; package artifacts and container images; deploy with Compose/Ansible; operate through health checks and logs; monitor application health and low-stock/order alerts. Jenkins stages are gated in source. Execution evidence must be appended after a real configured run.
+Plan requirements and weekly milestones; code through Git branches; build Maven and Vite artifacts; test with JUnit/Spring Boot, Selenium and Playwright; package container images; deploy locally with Compose; and monitor health through Docker checks and the API endpoint. Jenkins stages are gated in source. Ansible deployment and rollback are implemented and syntax checked, but a remote deployment has not been performed.
 
 ## Testing and demonstration
-Five browser test scenarios cover login, vendor creation, product creation, order creation and order status update. The Playwright configuration retains screenshots/traces on failure. The backend is configured for Maven Surefire. No seeded credentials, test pass, deployment or deliberately failing defect demonstration is claimed. Reproduce the defect demonstration by introducing a controlled local validation regression in a disposable branch, capture the failing test, fix it, and rerun; retain both CI run links/screenshots as evidence.
+Five Selenium browser scenarios cover login, vendor creation, product creation, order creation and order approval. Six Playwright tests cover the sign-in screen, login, vendor/product creation, order creation and approval. The backend unit suite has four passing tests. Compose starts MySQL, the API and Nginx; Flyway applies migrations through version 2. See [execution evidence](EVIDENCE.md) for verified results and environment-dependent steps that were not run.
 
 ## Installation and execution
-Follow the root README and [deployment notes](DEPLOYMENT.md). Build/deploy outcomes depend on installing Java 21/Maven, npm packages, Docker and a configured MySQL/target environment. Never publish production credentials.
+Follow the root README and [deployment notes](DEPLOYMENT.md). Java 21/Maven, Node.js/npm, Docker Compose, MySQL and the local browser suites were exercised in this workspace. Never publish production credentials.
 
 ## Limitations and future work
 HTTP Basic is suitable only for a protected academic demo; add OIDC, TLS termination, role-based vendor accounts, notification delivery, overdue rules, advanced filtering/pagination UI, expanded audit logging, stronger API error envelopes, automated rollback and production observability before production use. Multi-line orders are supported in the API, while the current user interface captures one line at a time.
 
 ## Conclusion
-The repository now contains a source implementation and a reproducible pipeline configuration for a procurement MVP. Final acceptance depends on running actual builds, tests, MySQL integration, browser automation, deployment, health checks and rollback in an equipped environment.
+The repository contains an implemented procurement MVP and reproducible CI/deployment configuration. Local builds, tests, MySQL integration, browser automation and health checks passed. Jenkins execution, registry publication and deployment/rollback against a separate Linux host remain to be configured.
 
 ## References
 Spring Boot, Spring Security, Spring Data and Flyway official documentation; React and Vite official documentation; MySQL 8 Reference Manual; Docker Compose documentation; Jenkins Pipeline documentation; Ansible documentation; Playwright documentation. See each project's official documentation for version-specific setup.
+
+## Final checklist audit
+See [the 15-task audit](FINAL-AUDIT-REPORT.md) for the implementation/files/commands/output/evidence/status ledger. The audit distinguishes local results from GitHub, Jenkins, registry, remote provisioning and rollback steps that were not executed.

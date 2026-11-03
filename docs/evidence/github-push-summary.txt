@@ -1,0 +1,28 @@
+GitHub branch publishing evidence — 2026-11-02
+================================================
+
+Repository: https://github.com/freak-dev/Build-vendor-purchase-order-portal
+SSH remote: git@github.com:freak-dev/Build-vendor-purchase-order-portal.git
+Authenticated GitHub user: freak-dev
+
+Authentication output:
+  Hi freak-dev! You've successfully authenticated, but GitHub does not provide shell access.
+
+Published branches:
+  git push -u origin main
+    * [new branch] main -> main
+    branch 'main' set up to track 'origin/main'.
+    head: 039e66c14e78ef1973e237939c3b1b80086d13e7
+
+  git push -u origin develop
+    * [new branch] develop -> develop
+    branch 'develop' set up to track 'origin/develop'.
+    head: ff76ba27c14cb26eb45a8e93d13b130c9ad27088
+
+GitHub branch search returned both `main` and `develop`.
+
+Pull request status:
+  A PR from develop to main was attempted through the GitHub connector. GitHub
+  returned HTTP 403: Resource not accessible by integration. No PR was created.
+  Open the comparison page to create it after connector permissions are updated:
+  https://github.com/freak-dev/Build-vendor-purchase-order-portal/compare/main...develop?expand=1

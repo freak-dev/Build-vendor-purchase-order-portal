@@ -1,0 +1,43 @@
+Jenkins execution evidence — 2026-11-02
+========================================
+
+Controller: Jenkins 2.580.2 in the local Ubuntu WSL distribution
+Job: vendor-portal-ci
+Build: 2
+Source branch: develop
+Source commit: 5e83269 (docs: record successful local Jenkins and registry run)
+Result: SUCCESS
+
+Pipeline stages completed:
+  Checkout
+  Backend build and unit tests
+  Frontend dependency install and build
+  Selenium end-to-end
+  Package
+  Docker build and publish
+  Deploy and health check: skipped by configured target condition
+
+Test/build output:
+  Maven verify: Tests run: 4, Failures: 0, Errors: 0, Skipped: 0
+  Maven Selenium Failsafe: Tests run: 5, Failures: 0, Errors: 0, Skipped: 0
+  Selenium elapsed time: 27.02 seconds
+  Both Maven invocations ended with BUILD SUCCESS.
+  Frontend npm ci and Vite production build passed.
+  Final Jenkins console line: Finished: SUCCESS
+
+Archived build outputs:
+  backend/target/vendor-purchase-order-portal-1.0.0.jar (65,693,412 bytes)
+  frontend/dist/index.html (376 bytes)
+  published-images.txt (123 bytes)
+
+Local Registry v2 publications:
+  localhost:5000/vendor/vendor-purchase-order-portal-backend:2
+    digest: sha256:46ebeb32d51fa1e55de478c85fecce21a40f7aab76938ab7d906d2c6abf259fb
+  localhost:5000/vendor/vendor-purchase-order-portal-frontend:2
+    digest: sha256:accfbf83605b742c6afc62d8ca78b9e64daa338050360ee206628d6de2bdebff
+
+Registry tag APIs listed tags 1 and 2 for both repositories. Build 2's post step
+skipped screenshot archiving because the passing Selenium suite produced no
+failure screenshots. The Jenkins deploy stage did not run; no external target
+was configured. This is local CI and local registry evidence, not hosted-registry
+publication or external deployment evidence.

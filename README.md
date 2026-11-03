@@ -17,6 +17,8 @@ A DevOps-enabled procurement MVP for managing suppliers, catalogue items, stock,
 4. Visit http://localhost:8088. Sign in with `ADMIN_USERNAME` and `ADMIN_PASSWORD` from `.env`.
 5. Stop with `docker compose down`; preserve the database with its named volume. Remove stored data only with `docker compose down -v`.
 
+With Docker Engine inside Ubuntu WSL, start the stack with `scripts/start-compose-wsl.sh`. If Windows cannot reach the WSL address, run `scripts/fix-wsl-localhost.ps1` from an Administrator PowerShell window. It adds a loopback-only port forward so `http://localhost:8088` reaches the app; rerun it if WSL gets a new address after restarting.
+
 The default Compose port is 8088. The backend and database are internal services; MySQL is not published to the host. The health endpoint is `/actuator/health`, and OpenAPI is at `/swagger-ui.html`.
 
 ## Local development
@@ -58,16 +60,22 @@ The Jenkinsfile runs backend verification, frontend install/build, archives pack
 
 Ansible inventory is a safe example placeholder (`192.0.2.10`). Configure it for a host you control. See [deployment notes](docs/DEPLOYMENT.md).
 
+### Free Render demo hosting
+
+The current Render workspace has a free Postgres database and a live static frontend. `render.yaml` defines the Dockerized Spring Boot API and securely references the existing database. Connect this repo's `develop` branch as a Blueprint in the Render Dashboard and deploy it to create the API; no duplicate database or frontend is declared. The free database expires after 30 days, and free web services can sleep after inactivity. The API generates an admin password; retrieve it from the API service's environment settings. See [Render deployment notes](docs/RENDER.md).
+
+The GitHub and Render accounts must be authorized in their respective dashboards; no account credentials or database secrets belong in Git or chat. This is coursework/demo hosting, not production availability.
+To execute the pipeline without external credentials, run `scripts/run-local-ci.ps1`. It launches a local Jenkins controller and registry inside WSL, runs the `develop` pipeline, and publishes images only to the local registry. See [the CI harness guide](ci/jenkins/README.md).
+
 ## GitHub
 
-Repository branches: `main`, `develop`, `feature/authentication`, `feature/vendor-management`, `feature/product-catalogue`, `feature/purchase-orders`, `feature/inventory`, `feature/dashboard`, `devops/jenkins-pipeline`, `devops/docker-deployment`. Create them after initializing remote repository as appropriate. No remote repository or push is claimed.
+Local and GitHub branches: `main` and `develop`. The `origin` remote is `git@github.com:freak-dev/Build-vendor-purchase-order-portal.git`. Both branches were pushed successfully using the project-specific Ed25519 SSH key. The GitHub connector still returns HTTP 403 when creating a pull request, so PR review/merge is not claimed. Open the [main vs. develop comparison](https://github.com/freak-dev/Build-vendor-purchase-order-portal/compare/main...develop?expand=1) to create it. Named feature and DevOps branches in the coursework checklist were not fabricated as historical work.
 
 ```powershell
-git remote add origin https://github.com/<your-account>/vendor-purchase-order-portal.git
 git push -u origin main
-git push origin develop
+git push -u origin develop
 ```
 
 ## Scope and limitations
 
-See [documentation](docs/README.md), [SRS](docs/SRS.md), [architecture](docs/ARCHITECTURE.md), [milestone plan](docs/IMPLEMENTATION-PLAN.md), and [project report](docs/PROJECT-REPORT.md). This MVP exposes role-aware HTTP Basic credentials held in browser session storage; use an OAuth2/OIDC identity provider and secure same-site session/cookie strategy for production. Vendor accounts and notifications, overdue detection, robust multi-line UI editing, pagination controls, and a live Linux rollback rehearsal remain future work. Runtime evidence is only recorded after actual execution.
+See the [user and developer manual](docs/USER-MANUAL.md), [documentation index](docs/README.md), [final 15-task audit](docs/FINAL-AUDIT-REPORT.md), [viva presentation](docs/FINAL-PRESENTATION.html), [SRS](docs/SRS.md), [architecture](docs/ARCHITECTURE.md), [milestone plan](docs/IMPLEMENTATION-PLAN.md), and [project report](docs/PROJECT-REPORT.md). This MVP exposes role-aware HTTP Basic credentials held in browser session storage; use an OAuth2/OIDC identity provider and secure same-site session/cookie strategy for production. Vendor accounts and notifications, overdue detection, robust multi-line UI editing, pagination controls, and a live Linux rollback rehearsal remain future work. Runtime evidence is only recorded after actual execution.
